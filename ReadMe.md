@@ -20,49 +20,48 @@ A backend system for managing clinic operations including patients, doctors, app
 
 
 clinic-backend/
-│── src/
-│   ├── main.ts                # App entry point
-│   ├── app.module.ts          # Root module
-│   │
-│   ├── config/                # Config & environment setup
-│   │   ├── database.config.ts
-│   │   └── app.config.ts
-│   │
-│   ├── common/                # Shared utilities
-│   │   ├── decorators/
-│   │   ├── filters/
-│   │   ├── interceptors/
-│   │   └── guards/
-│   │
-│   ├── modules/
-│   │   ├── auth/              # Authentication & Authorization
-│   │   │   ├── auth.module.ts
-│   │   │   ├── auth.service.ts
-│   │   │   ├── auth.controller.ts
-│   │   │   └── jwt.strategy.ts
-│   │   │
-│   │   ├── doctors/           # Doctors Module
-│   │   ├── patients/          # Patients Module
-│   │   ├── appointments/      # Appointments Module
-│   │   ├── medical-records/   # Medical Records Module
-│   │   ├── treatment-plans/   # Treatment Plans Module
-│   │   ├── procedures/        # Procedures Module
-│   │   ├── staff/             # Staff Module
-│   │   ├── finances/          # Expenses & Other Incomes
-│   │   ├── documents/         # Clinical Documents
-│   │   └── images/            # Patient Images
-│   │
-│   ├── prisma/                # Prisma (if using)
-│   │   ├── schema.prisma
-│   │   └── migrations/
-│   │
-│   └── utils/                 # Helper functions
+├── src/
+│ ├── main.ts # App entry point
+│ ├── app.module.ts # Root module
+│ │
+│ ├── config/ # Config & environment setup
+│ │ ├── database.config.ts
+│ │ └── app.config.ts
+│ │
+│ ├── common/ # Shared utilities
+│ │ ├── decorators/
+│ │ ├── filters/
+│ │ ├── interceptors/
+│ │ └── guards/
+│ │
+│ ├── modules/
+│ │ ├── auth/ # Authentication & Authorization
+│ │ │ ├── auth.module.ts
+│ │ │ ├── auth.service.ts
+│ │ │ ├── auth.controller.ts
+│ │ │ └── jwt.strategy.ts
+│ │ │
+│ │ ├── doctors/ # Doctors Module
+│ │ ├── patients/ # Patients Module
+│ │ ├── appointments/ # Appointments Module
+│ │ ├── medical-records/ # Medical Records Module
+│ │ ├── treatment-plans/ # Treatment Plans Module
+│ │ ├── procedures/ # Procedures Module
+│ │ ├── staff/ # Staff Module
+│ │ ├── finances/ # Expenses & Other Incomes
+│ │ ├── documents/ # Clinical Documents
+│ │ └── images/ # Patient Images
+│ │
+│ ├── prisma/ # Prisma (if using)
+│ │ ├── schema.prisma
+│ │ └── migrations/
+│ │
+│ └── utils/ # Helper functions
 │
-├── test/                      # Unit & integration tests
-│
-├── .env                       # Environment variables
+├── test/ # Unit & integration tests
+├── .env # Environment variables
 ├── .gitignore
-├── docker-compose.yml         # For DB & app containerization
+├── docker-compose.yml # For DB & app containerization
 ├── Dockerfile
 ├── package.json
 └── README.md
