@@ -48,9 +48,6 @@ clinic-backend/
 │   │   ├── finances/          # Expenses & Other Incomes
 │   │   ├── documents/         # Clinical Documents
 │   │   └── images/            # Patient Images
-│   ├── prisma/                # Prisma (if using)
-│   │   ├── schema.prisma
-│   │   └── migrations/
 │   └── utils/                 # Helper functions
 ├── test/                      # Unit & integration tests
 ├── .env                       # Environment variables
