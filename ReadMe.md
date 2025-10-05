@@ -19,6 +19,7 @@ A backend system for managing clinic operations including patients, doctors, app
 ## 📂 Project File Structure
 
 
+```
 Tech-Hub-project-Clinic_Management_System-BackEnd/
 ├── src/
 │   ├── main.ts                          # App entry point
@@ -145,3 +146,4 @@ Tech-Hub-project-Clinic_Management_System-BackEnd/
 ├── tsconfig.json                      # TypeScript configuration
 ├── tsconfig.build.json               # Build TypeScript configuration
 └── ReadMe.md                         # Project documentation
+```
