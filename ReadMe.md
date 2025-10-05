@@ -1,98 +1,68 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🏥 Clinic Management System – Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A backend system for managing clinic operations including patients, doctors, appointments, medical records, treatment plans, procedures, staff, finances, and clinical documents.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📅 Project Timeline – Backend (Clinic Management System)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+| **Week**       | **Phase**                                 | **Tasks** |
+|----------------|-------------------------------------------|-----------|
+| **Week 1**     | Phase 1 – Project Setup & Database Design | - Initialize backend project (NestJS/Express)<br>- Setup Git repository & environment configs<br>- Configure ORM & database migrations<br>- Implement database schema (Doctors, Patients, Staff, Appointments, etc.) |
+| **Week 2**     | Phase 2 – Core Modules                    | - Doctors module (CRUD + search)<br>- Patients module (CRUD + details: allergies, conditions)<br>- Staff module (CRUD + role assignment)<br>- Authentication & Authorization (JWT + roles) |
+| **Week 3**     | Phase 3 – Clinical Operations             | - Appointments (booking, updating, canceling)<br>- Prevent double-booking & track status<br>- Medical Records (diagnosis, findings, medications)<br>- Treatment Plans (diagnosis summary, prescription, status)<br>- Procedures (linked to plans & appointments) |
+| **Week 4**     | Phase 4 – Admin & Financial Modules       | - Expenses module (categories, reasons)<br>- Other Incomes module (lab, donations, services)<br>- Clinical Documents upload & management<br>- Patient Images upload & tracking |
+| **End of Month** | Phase 5 – Finalization & Deployment       | - API documentation (Swagger/OpenAPI)<br>- Unit & integration testing<br>- Security checks (RBAC, file validation)<br>- CI/CD pipeline (GitHub Actions, Docker)<br>- Deployment (Heroku/AWS/Render)<br>- Monitoring & error tracking (Sentry/logging) |
 
-## Project setup
+----------------------------------------------------------------------------
 
-```bash
-$ npm install
-```
+## 📂 Project File Structure
 
-## Compile and run the project
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+clinic-backend/
+│── src/
+│   ├── main.ts                # App entry point
+│   ├── app.module.ts          # Root module
+│   │
+│   ├── config/                # Config & environment setup
+│   │   ├── database.config.ts
+│   │   └── app.config.ts
+│   │
+│   ├── common/                # Shared utilities
+│   │   ├── decorators/
+│   │   ├── filters/
+│   │   ├── interceptors/
+│   │   └── guards/
+│   │
+│   ├── modules/
+│   │   ├── auth/              # Authentication & Authorization
+│   │   │   ├── auth.module.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.controller.ts
+│   │   │   └── jwt.strategy.ts
+│   │   │
+│   │   ├── doctors/           # Doctors Module
+│   │   ├── patients/          # Patients Module
+│   │   ├── appointments/      # Appointments Module
+│   │   ├── medical-records/   # Medical Records Module
+│   │   ├── treatment-plans/   # Treatment Plans Module
+│   │   ├── procedures/        # Procedures Module
+│   │   ├── staff/             # Staff Module
+│   │   ├── finances/          # Expenses & Other Incomes
+│   │   ├── documents/         # Clinical Documents
+│   │   └── images/            # Patient Images
+│   │
+│   ├── prisma/                # Prisma (if using)
+│   │   ├── schema.prisma
+│   │   └── migrations/
+│   │
+│   └── utils/                 # Helper functions
+│
+├── test/                      # Unit & integration tests
+│
+├── .env                       # Environment variables
+├── .gitignore
+├── docker-compose.yml         # For DB & app containerization
+├── Dockerfile
+├── package.json
+└── README.md
