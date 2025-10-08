@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Patient } from '../../patients/entities/patient.entitiy';
+import { Appointment } from '../../appointments/entities/appointments.entity';
 
 @Entity('clinical_documents')
 export class ClinicalDocument {
@@ -24,4 +25,8 @@ export class ClinicalDocument {
     @ManyToOne(() => Patient)
     @JoinColumn({ name: 'patient_id' })
     patient: Patient;
+
+    @ManyToOne(() => Appointment, (a) => a.clinicalDocuments, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'appointment_id' })
+    appointment: Appointment;
 }

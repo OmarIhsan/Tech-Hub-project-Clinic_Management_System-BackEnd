@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { IsInt, IsString, IsJSON, IsOptional } from 'class-validator';
+import { IsInt, IsString, IsJSON, IsOptional, IsObject } from 'class-validator';
 
 export class CreateMedicalRecordsDto {
   @IsInt()
@@ -26,6 +26,6 @@ export class CreateMedicalRecordsDto {
   medical_conditions: string;
 
   @IsOptional()
-  @IsJSON()
+  @IsObject()
   current_meds_json?: object; 
 }

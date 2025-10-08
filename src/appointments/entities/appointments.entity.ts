@@ -1,19 +1,21 @@
 /* eslint-disable prettier/prettier */
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, OneToMany, JoinColumn, Index } from 'typeorm';
+import { Patient } from '../../patients/entities/patient.entitiy';
+import { Doctors } from '../../doctors/entities/doctors.entity';
+import { TreatmentPlans } from '../../treatment-plans/entities/treatment-plans.entity';
+import { Procedures } from '../../procedures/entities/procedures.entity';
+import { ClinicalDocument } from '../../clinical-documents/entities/clinical-document.entity';
+import { AppointmentStatus } from '../../common/enums/status.enums';
 
-@Entity('appointment')
+// NOTE: renamed to plural to match provided schema
+@Entity('appointments')
 export class Appointment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  status: string;
+  @Column({ type: 'varchar', length: 20 })
+  //@Index('idx_appointments_status')
+  status: AppointmentStatus;
 
   @Column({ type: 'timestamp' })
   appointment_time: Date;
@@ -23,6 +25,23 @@ export class Appointment {
 
   @Column()
   doctor_id: number;
+
+  @ManyToOne(() => Patient, (p) => p.appointments, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'patient_id' })
+  patient: Patient;
+
+  @ManyToOne(() => Doctors, (d) => d.appointments, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'doctor_id' })
+  doctor: Doctors;
+
+  @OneToMany(() => TreatmentPlans, (tp) => tp.appointment)
+  treatmentPlans: TreatmentPlans[];
+
+  @OneToMany(() => Procedures, (proc) => proc.appointment)
+  procedures: Procedures[];
+
+  @OneToMany(() => ClinicalDocument, (cd) => cd.appointment)
+  clinicalDocuments: ClinicalDocument[];
 
   @CreateDateColumn()
   createdAt: Date;

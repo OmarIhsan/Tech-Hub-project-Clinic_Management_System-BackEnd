@@ -23,11 +23,4 @@ export class CreatePatientDto {
   @IsString()
   address?: string;
 
-  @IsOptional()
-  @IsString()
-  allergies_text?: string;
-
-  @IsOptional()
-  @IsString()
-  medical_conditions_text?: string;
 }

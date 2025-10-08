@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Staff } from '../../staff/entities/entity.staff';
 
 @Entity('expenses')
@@ -19,9 +19,10 @@ export class Expense {
     reason: string;
 
     @Column()
+    @Index('idx_expenses_staff_id')
     staff_id: number;
 
-    @ManyToOne(() => Staff)
+    @ManyToOne(() => Staff, (s) => s.expenses, { onDelete: 'SET NULL', nullable: true })
     @JoinColumn({ name: 'staff_id' })
     staff: Staff;
 }

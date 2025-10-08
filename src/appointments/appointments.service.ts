@@ -11,26 +11,27 @@ import { Repository } from 'typeorm';
 import { Appointment } from './entities/appointments.entity';
 import { CreateAppointmentDto } from './dto/create-appointments.dto';
 import { UpdateAppointmentDto } from './dto/update-appointments.dto';
+import { AppointmentStatus } from 'src/common/enums/status.enums';
 
 @Injectable()
 export class AppointmentService {
   constructor(
     @InjectRepository(Appointment)
     private readonly appointmentRepository: Repository<Appointment>,
-  ) {}
+  ) { }
 
   async create(
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment> {
-    const { patient_id, doctor_id, appointment_time, status } =
-      createAppointmentDto;
+    const { patient_id, doctor_id, appointment_time, status } = createAppointmentDto;
 
     const appointment = this.appointmentRepository.create({
       patient_id,
       doctor_id,
-      appointment_time: new Date(appointment_time), // converts ISO string to Date
-      status,
+      appointment_time: new Date(appointment_time),
+      status: (status ?? AppointmentStatus.SCHEDULED) as AppointmentStatus,
     });
+
 
     return this.appointmentRepository.save(appointment);
   }
@@ -67,17 +68,13 @@ export class AppointmentService {
 
     const { status } = updateAppointmentDto;
 
-    if (status !== undefined && status !== appointment.status) {
-      const existingStatusAppointment =
-        await this.appointmentRepository.findOne({
-          where: { status },
-        });
-      if (existingStatusAppointment) {
-        throw new ConflictException('Appointment status already exists');
+    if (status !== undefined) {
+      // runtime guard in case validation layer is bypassed
+      if (!Object.values(AppointmentStatus).includes(status as AppointmentStatus)) {
+        throw new ConflictException('Invalid appointment status value');
       }
+      appointment.status = status as AppointmentStatus;
     }
-
-    if (status !== undefined) appointment.status = status;
 
     return this.appointmentRepository.save(appointment);
   }

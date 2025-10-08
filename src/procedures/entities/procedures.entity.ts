@@ -1,11 +1,9 @@
 /* eslint-disable prettier/prettier */
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Patient } from '../../patients/entities/patient.entitiy';
+import { Doctors } from '../../doctors/entities/doctors.entity';
+import { Appointment } from '../../appointments/entities/appointments.entity';
+import { TreatmentPlans } from '../../treatment-plans/entities/treatment-plans.entity';
 
 @Entity('procedures')
 export class Procedures {
@@ -23,6 +21,22 @@ export class Procedures {
 
   @Column()
   plan_id: number;
+
+  @ManyToOne(() => Patient, (p) => p.procedures, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'patient_id' })
+  patient: Patient;
+
+  @ManyToOne(() => Doctors, (d) => d.procedures, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'doctor_id' })
+  doctor: Doctors;
+
+  @ManyToOne(() => Appointment, (a) => a.procedures, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'appointment_id' })
+  appointment: Appointment;
+
+  @ManyToOne(() => TreatmentPlans, (tp) => tp.procedures, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'plan_id' })
+  plan: TreatmentPlans;
 
   @Column()
   procedure_name: string;

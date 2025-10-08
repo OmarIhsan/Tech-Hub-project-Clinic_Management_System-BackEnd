@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Patient } from '../../patients/entities/patient.entitiy';
 import { Staff } from '../../staff/entities/entity.staff';
 
@@ -17,16 +17,18 @@ export class OtherIncome {
     income_date: Date;
 
     @Column()
+    @Index('idx_other_incomes_staff_id')
     staff_id: number;
 
     @Column()
+    @Index('idx_other_incomes_patient_id')
     patient_id: number;
 
-    @ManyToOne(() => Staff)
+    @ManyToOne(() => Staff, (s) => s.otherIncomes, { onDelete: 'SET NULL', nullable: true })
     @JoinColumn({ name: 'staff_id' })
     staff: Staff;
 
-    @ManyToOne(() => Patient)
+    @ManyToOne(() => Patient, (p) => p.otherIncomes, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'patient_id' })
     patient: Patient;
 }

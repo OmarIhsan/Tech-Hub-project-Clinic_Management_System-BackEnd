@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { IsString, IsDateString, IsInt } from 'class-validator';
+import { IsDateString, IsInt, IsEnum } from 'class-validator';
+import { AppointmentStatus } from '../../common/enums/status.enums';
 
 export class CreateAppointmentDto {
   @IsInt()
@@ -13,6 +14,6 @@ export class CreateAppointmentDto {
   @IsDateString()
   appointment_time: string;
 
-  @IsString()
-  status: string;
+  @IsEnum(AppointmentStatus)
+  status: AppointmentStatus;
 }

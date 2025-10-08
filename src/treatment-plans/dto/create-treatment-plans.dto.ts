@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString,IsEnum } from 'class-validator';
+import { TreatmentPlanStatus } from 'src/common/enums/status.enums';
 
 export class CreateTreatmentPlansDto {
   @IsInt()
@@ -22,6 +23,6 @@ export class CreateTreatmentPlansDto {
   @IsString()
   plan_details: string;
 
-  @IsString()
-  status: string;
+  @IsEnum(TreatmentPlanStatus)
+  status: TreatmentPlanStatus;
 }
