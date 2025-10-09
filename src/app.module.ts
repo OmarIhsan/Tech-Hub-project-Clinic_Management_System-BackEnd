@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,7 +15,7 @@ import { ProceduresModule } from './procedures/procedures.module';
 import { MedicalRecordsModule } from './medical-records/medical-records.module';
 import { DoctorsModule } from './doctors/doctors.module';
 import { AppointmentModule } from './appointments/appointments.module';
-
+import { AuthModule } from './Auth/auth.module';
 
 @Module({
   imports: [
@@ -47,8 +48,9 @@ import { AppointmentModule } from './appointments/appointments.module';
     MedicalRecordsModule,
     DoctorsModule,
     AppointmentModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

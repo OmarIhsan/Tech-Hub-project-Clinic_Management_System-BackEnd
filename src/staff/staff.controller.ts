@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { Staff } from './entities/entity.staff';
 import { CreateStaffDto } from './dto/create-staff.dto';
@@ -24,7 +34,10 @@ export class StaffController {
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateStaffDto): Promise<Staff> {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdateStaffDto,
+  ): Promise<Staff> {
     return this.staffService.update(id, data);
   }
 

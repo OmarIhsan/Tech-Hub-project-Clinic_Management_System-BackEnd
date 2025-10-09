@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+/* eslint-disable prettier/prettier */
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Appointment } from '../../appointments/entities/appointments.entity';
 import { MedicalRecords } from '../../medical-records/entities/medical-records.entity';
 import { TreatmentPlans } from '../../treatment-plans/entities/treatment-plans.entity';
@@ -23,7 +31,6 @@ export class Patient {
 
   @Column({ length: 15 })
   phone: string;
-
 
   @Column({ length: 50 })
   email: string;

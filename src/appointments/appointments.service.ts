@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+
+
 
 import {
   Injectable,
@@ -18,12 +20,13 @@ export class AppointmentService {
   constructor(
     @InjectRepository(Appointment)
     private readonly appointmentRepository: Repository<Appointment>,
-  ) { }
+  ) {}
 
   async create(
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment> {
-    const { patient_id, doctor_id, appointment_time, status } = createAppointmentDto;
+    const { patient_id, doctor_id, appointment_time, status } =
+      createAppointmentDto;
 
     const appointment = this.appointmentRepository.create({
       patient_id,
@@ -31,7 +34,6 @@ export class AppointmentService {
       appointment_time: new Date(appointment_time),
       status: (status ?? AppointmentStatus.SCHEDULED) as AppointmentStatus,
     });
-
 
     return this.appointmentRepository.save(appointment);
   }
@@ -70,7 +72,9 @@ export class AppointmentService {
 
     if (status !== undefined) {
       // runtime guard in case validation layer is bypassed
-      if (!Object.values(AppointmentStatus).includes(status as AppointmentStatus)) {
+      if (
+        !Object.values(AppointmentStatus).includes(status as AppointmentStatus)
+      ) {
         throw new ConflictException('Invalid appointment status value');
       }
       appointment.status = status as AppointmentStatus;

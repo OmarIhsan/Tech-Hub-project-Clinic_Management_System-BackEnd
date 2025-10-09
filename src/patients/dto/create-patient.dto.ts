@@ -1,4 +1,11 @@
-import { IsString, IsEmail, IsOptional, IsDateString, Length } from 'class-validator';
+/* eslint-disable prettier/prettier */
+import {
+  IsString,
+  IsEmail,
+  IsOptional,
+  IsDateString,
+  Length,
+} from 'class-validator';
 
 export class CreatePatientDto {
   @IsString()
@@ -22,5 +29,4 @@ export class CreatePatientDto {
   @IsOptional()
   @IsString()
   address?: string;
-
 }
