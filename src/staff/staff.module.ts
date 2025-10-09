@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Staff } from './entities/entity.staff';
@@ -8,5 +9,6 @@ import { StaffController } from './staff.controller';
   imports: [TypeOrmModule.forFeature([Staff])],
   controllers: [StaffController],
   providers: [StaffService],
+  exports: [StaffService],
 })
 export class StaffModule {}

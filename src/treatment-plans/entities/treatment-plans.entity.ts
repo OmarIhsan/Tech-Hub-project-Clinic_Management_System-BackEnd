@@ -1,5 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn, OneToMany, Index } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  Index,
+} from 'typeorm';
 import { Patient } from '../../patients/entities/patient.entitiy';
 import { Doctors } from '../../doctors/entities/doctors.entity';
 import { Appointment } from '../../appointments/entities/appointments.entity';
@@ -24,11 +34,17 @@ export class TreatmentPlans {
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 
-  @ManyToOne(() => Doctors, (d) => d.treatmentPlans, { onDelete: 'SET NULL', nullable: true })
+  @ManyToOne(() => Doctors, (d) => d.treatmentPlans, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn({ name: 'doctor_id' })
   doctor: Doctors;
 
-  @ManyToOne(() => Appointment, (a) => a.treatmentPlans, { onDelete: 'SET NULL', nullable: true })
+  @ManyToOne(() => Appointment, (a) => a.treatmentPlans, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn({ name: 'appointment_id' })
   appointment: Appointment;
 
@@ -44,7 +60,7 @@ export class TreatmentPlans {
   @Column({ type: 'bytea', nullable: true })
   prescription: Buffer;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'varchar', length: 20, default: TreatmentPlanStatus.DRAFT })
   @Index('idx_treatment_plans_status')
   status: TreatmentPlanStatus;
 

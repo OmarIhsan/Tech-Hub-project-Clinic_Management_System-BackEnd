@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 
 import { IsDateString, IsInt, IsEnum } from 'class-validator';
 import { AppointmentStatus } from '../../common/enums/status.enums';

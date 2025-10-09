@@ -1,5 +1,15 @@
-import { IsDate, IsString, IsEmail, Length } from 'class-validator';
+/* eslint-disable prettier/prettier */
+import {
+  IsDate,
+  IsString,
+  IsEmail,
+  Length,
+  IsOptional,
+  IsEnum,
+  MinLength,
+} from 'class-validator';
 import { Type } from 'class-transformer';
+import { StaffRole } from 'src/common/enums/status.enums';
 
 export class CreateStaffDto {
   @IsString()
@@ -16,4 +26,12 @@ export class CreateStaffDto {
   @IsDate()
   @Type(() => Date)
   hire_date: Date;
+
+  @IsEnum(StaffRole)
+  @IsOptional()
+  role?: StaffRole;
+
+  @IsString()
+  @MinLength(6)
+  password: string;
 }

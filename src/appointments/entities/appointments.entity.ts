@@ -1,5 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, OneToMany, JoinColumn, Index } from 'typeorm';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  Index,
+} from 'typeorm';
 import { Patient } from '../../patients/entities/patient.entitiy';
 import { Doctors } from '../../doctors/entities/doctors.entity';
 import { TreatmentPlans } from '../../treatment-plans/entities/treatment-plans.entity';
@@ -30,7 +41,10 @@ export class Appointment {
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 
-  @ManyToOne(() => Doctors, (d) => d.appointments, { onDelete: 'SET NULL', nullable: true })
+  @ManyToOne(() => Doctors, (d) => d.appointments, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn({ name: 'doctor_id' })
   doctor: Doctors;
 
