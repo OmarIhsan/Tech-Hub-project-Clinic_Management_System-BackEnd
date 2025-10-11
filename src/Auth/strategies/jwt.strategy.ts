@@ -13,7 +13,7 @@ export interface JwtPayload {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private usersService: StaffService) {
+  constructor(private staffService: StaffService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -22,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    const user = await this.usersService.findOne(parseInt(payload.sub));
+    const user = await this.staffService.findOne(parseInt(payload.sub));
     if (!user) {
       throw new UnauthorizedException('User not found');
     }

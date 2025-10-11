@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 
 
 
@@ -21,7 +23,7 @@ export class StaffService {
     private readonly staffRepo: Repository<Staff>,
   ) {}
 
-  findAll(): Promise<Staff[]> {
+  findAll(offset?: number, limit?: number): Promise<Staff[]> {
     return this.staffRepo.find();
   }
 
