@@ -3,46 +3,164 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Delete,
   Body,
   Param,
+  Delete,
+  Put,
+  Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { Staff } from './entities/entity.staff';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
+import { Roles } from 'src/Auth/decorators/roles.decorator';
+import { JwtAuthGuard } from 'src/Auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/Auth/guards/roles.guard';
+import { StaffRole } from 'src/common/enums/status.enums';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiBody,
+} from '@nestjs/swagger';
 
+@ApiTags('staff')
 @Controller('staff')
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.SUPER_ADMIN)
   @Get()
-  getAll(): Promise<Staff[]> {
-    return this.staffService.findAll();
+  @ApiOperation({
+    summary: 'Get all staff members',
+    description: 'Retrieves a paginated list of all staff members.',
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    example: 0,
+    description: 'Pagination offset (default: 0)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    example: 10,
+    description: 'Pagination limit (default: 10)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff retrieved successfully.',
+    type: [Staff],
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 400, description: 'Validation error.' })
+  async getAll(
+    @Query('offset', ParseIntPipe) offset: number = 0,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+  ): Promise<Staff[]> {
+    return this.staffService.findAll(offset, limit);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.SUPER_ADMIN)
   @Get(':id')
-  getOne(@Param('id', ParseIntPipe) id: number): Promise<Staff> {
+  @ApiOperation({
+    summary: 'Get staff member by ID',
+    description: 'Retrieves detailed information of a single staff member.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Staff unique identifier',
+    example: 1,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff member found successfully.',
+    type: Staff,
+  })
+  @ApiResponse({ status: 404, description: 'Staff member not found.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  async getOne(@Param('id', ParseIntPipe) id: number): Promise<Staff> {
     return this.staffService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.SUPER_ADMIN)
   @Post()
-  create(@Body() data: CreateStaffDto): Promise<Staff> {
+  @ApiOperation({
+    summary: 'Create a new staff member',
+    description: 'Adds a new staff member record to the clinic system.',
+  })
+  @ApiBody({ type: CreateStaffDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Staff member successfully created.',
+    type: Staff,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Staff member with this email already exists.',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 400, description: 'Validation error.' })
+  async create(@Body() data: CreateStaffDto): Promise<Staff> {
     return this.staffService.create(data);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.SUPER_ADMIN)
   @Put(':id')
-  update(
+  @ApiOperation({
+    summary: 'Update staff member',
+    description: 'Updates details of an existing staff member.',
+  })
+  @ApiParam({ name: 'id', example: 1, description: 'Staff unique identifier' })
+  @ApiBody({ type: UpdateStaffDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff member updated successfully.',
+    type: Staff,
+  })
+  @ApiResponse({ status: 404, description: 'Staff member not found.' })
+  @ApiResponse({ status: 409, description: 'Email already exists.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 400, description: 'Validation error.' })
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateStaffDto,
   ): Promise<Staff> {
     return this.staffService.update(id, data);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.SUPER_ADMIN)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  @ApiOperation({
+    summary: 'Delete staff member',
+    description: 'Removes a staff member from the system permanently.',
+  })
+  @ApiParam({ name: 'id', example: 1, description: 'Staff unique identifier' })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff member deleted successfully.',
+    schema: {
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Staff member deleted successfully.',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Staff member not found.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 400, description: 'Validation error.' })
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.staffService.remove(id);
   }
 }

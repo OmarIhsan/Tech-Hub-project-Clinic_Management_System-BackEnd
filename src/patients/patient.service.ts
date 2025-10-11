@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,12 +12,14 @@ export class PatientsService {
     private readonly patientRepo: Repository<Patient>,
   ) {}
 
-  findAll(): Promise<Patient[]> {
+  findAll(offset?: number, limit?: number): Promise<Patient[]> {
     return this.patientRepo.find();
   }
 
   async findOne(id: number): Promise<Patient> {
-    const patient = await this.patientRepo.findOne({ where: { patient_id: id } });
+    const patient = await this.patientRepo.findOne({
+      where: { patient_id: id },
+    });
     if (!patient) throw new NotFoundException(`Patient #${id} not found`);
     return patient;
   }

@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,7 +18,7 @@ export class ExpensesService {
     private readonly staffRepo: Repository<Staff>,
   ) {}
 
-  findAll(): Promise<Expense[]> {
+  findAll(offset: number, limit: number): Promise<Expense[]> {
     return this.expenseRepo.find({ relations: ['staff'] });
   }
 

@@ -21,12 +21,21 @@ export class DoctorsService {
   async create(createDoctorsDto: CreateDoctorsDto): Promise<Doctors> {
     const { full_name, gender, phone, email, hire_date } = createDoctorsDto;
 
+    let hireDateValue: Date | undefined;
+    if (hire_date) {
+      if (typeof hire_date === 'string' || typeof hire_date === 'number') {
+        hireDateValue = new Date(hire_date);
+      } else if (hire_date instanceof Date) {
+        hireDateValue = hire_date;
+      }
+    }
+
     const doctor = this.doctorsRepository.create({
       full_name,
       gender,
       phone,
       email,
-      hire_date: new Date(hire_date),
+      hire_date: hireDateValue,
     });
 
     return this.doctorsRepository.save(doctor);
@@ -76,7 +85,14 @@ export class DoctorsService {
     if (gender !== undefined) doctor.gender = gender;
     if (phone !== undefined) doctor.phone = phone;
     if (email !== undefined) doctor.email = email;
-    if (hire_date !== undefined) doctor.hire_date = new Date(hire_date);
+
+    if (hire_date !== undefined) {
+      if (typeof hire_date === 'string' || typeof hire_date === 'number') {
+        doctor.hire_date = new Date(hire_date);
+      } else if (hire_date instanceof Date) {
+        doctor.hire_date = hire_date;
+      }
+    }
 
     return this.doctorsRepository.save(doctor);
   }
