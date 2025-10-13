@@ -60,11 +60,17 @@ export class ClinicalDocumentsController {
     description: 'Clinical documents retrieved successfully.',
     type: [ClinicalDocument],
   })
-  getAll(
-    @Query('offset', ParseIntPipe) offset: number = 0,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+  async getAll(
+    @Query('offset') offset?: string,
+    @Query('limit') limit?: string,
   ): Promise<ClinicalDocument[]> {
-    return this.clinicalDocumentsService.findAll(offset, limit);
+    // Safely parse query parameters with defaults
+    const offsetNum =
+      offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
+    const limitNum =
+      limit && !isNaN(parseInt(limit, 10)) ? parseInt(limit, 10) : 10;
+
+    return this.clinicalDocumentsService.findAll(offsetNum, limitNum);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

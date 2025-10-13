@@ -12,8 +12,6 @@ import { OtherIncome } from '../../other-incomes/entities/other-income.entity';
 import { PatientImage } from '../../patient-images/entities/patient-image.entity';
 import { StaffRole } from 'src/common/enums/status.enums';
 
-
-
 @Entity('staff')
 export class Staff {
   @PrimaryGeneratedColumn()
@@ -22,13 +20,13 @@ export class Staff {
   @Column({ length: 100 })
   full_name: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, default: 'N/A' })
   phone: string;
 
   @Column({ length: 100 })
   email: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   hire_date: Date;
 
   @Column({ default: StaffRole.CUSTUMER })
