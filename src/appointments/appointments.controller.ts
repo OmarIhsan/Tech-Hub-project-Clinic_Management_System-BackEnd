@@ -84,10 +84,16 @@ export class AppointmentController {
     type: [Appointment],
   })
   async findAll(
-    @Query('offset', ParseIntPipe) offset: number = 0,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('offset') offset?: string,
+    @Query('limit') limit?: string,
   ) {
-    return this.appointmentService.findAll(offset, limit);
+    // Safely parse query parameters, defaulting to 0 and 10
+    const offsetNum =
+      offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
+    const limitNum =
+      limit && !isNaN(parseInt(limit, 10)) ? parseInt(limit, 10) : 10;
+
+    return this.appointmentService.findAll(offsetNum, limitNum);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

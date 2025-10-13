@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -17,15 +16,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'your-secret-key',
+      secretOrKey: process.env.JWT_SECRET || 'your-super-secretkey',
     });
   }
 
   async validate(payload: JwtPayload) {
+    
     const user = await this.staffService.findOne(parseInt(payload.sub));
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return user;
+
+    return { userId: user.staff_id, email: user.email, role: user.role };
   }
 }

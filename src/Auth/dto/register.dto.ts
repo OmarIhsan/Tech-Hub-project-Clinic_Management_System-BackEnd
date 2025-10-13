@@ -20,6 +20,9 @@ export class RegisterDto {
   @MinLength(6)
   password: string;
 
+  @IsString()
+  phone: string;
+
   @IsEnum(StaffRole)
   @IsOptional()
   role?: StaffRole = StaffRole.CUSTUMER;

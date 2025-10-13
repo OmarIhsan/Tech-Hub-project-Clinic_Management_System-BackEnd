@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,6 +16,7 @@ import { MedicalRecordsModule } from './medical-records/medical-records.module';
 import { DoctorsModule } from './doctors/doctors.module';
 import { AppointmentModule } from './appointments/appointments.module';
 import { AuthModule } from './Auth/auth.module';
+import { LoggerMiddleware } from './common/middlewares/login.middleware';
 
 @Module({
   imports: [
@@ -53,4 +54,8 @@ import { AuthModule } from './Auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
