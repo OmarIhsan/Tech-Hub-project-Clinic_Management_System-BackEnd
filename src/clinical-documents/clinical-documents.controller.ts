@@ -10,7 +10,14 @@ import {
   ParseIntPipe,
   Query,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  UploadedFiles,
+  BadRequestException,
+  Res,
+  NotFoundException,
 } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ClinicalDocumentsService } from './clinical-documents.service';
 import { ClinicalDocument } from './entities/clinical-document.entity';
 import { CreateClinicalDocumentDto } from './dto/create-clinical-document.dto';
@@ -19,6 +26,7 @@ import { Roles } from 'src/Auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/Auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/Auth/guards/roles.guard';
 import { StaffRole } from 'src/common/enums/status.enums';
+import { Public } from 'src/Auth/decorators/public.decorator';
 import {
   ApiTags,
   ApiOperation,
@@ -27,7 +35,12 @@ import {
   ApiQuery,
   ApiBody,
   ApiBearerAuth,
+  ApiConsumes,
 } from '@nestjs/swagger';
+import { multerConfigClinicalDocuments } from './multer.config';
+import type { Response } from 'express';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 @ApiTags('clinical-documents')
 @Controller('clinical-documents')
@@ -73,6 +86,36 @@ export class ClinicalDocumentsController {
       limit && !isNaN(parseInt(limit, 10)) ? parseInt(limit, 10) : 10;
 
     return this.clinicalDocumentsService.findAll(offsetNum, limitNum);
+  }
+
+  @Public()
+  @Get('file/:filename')
+  @ApiOperation({
+    summary: 'Get clinical document file (Public)',
+    description:
+      'Publicly accessible endpoint to retrieve clinical document files.',
+  })
+  @ApiParam({
+    name: 'filename',
+    description: 'Document filename',
+    example: 'clinical-doc-1760427321860-666227675.pdf',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Document file retrieved successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Document file not found.' })
+  async getDocumentFile(
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ) {
+    const filePath = join(process.cwd(), 'uploads', 'clinical_documents', filename);
+
+    if (!existsSync(filePath)) {
+      throw new NotFoundException('Document file not found');
+    }
+
+    return res.sendFile(filePath);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -124,6 +167,220 @@ export class ClinicalDocumentsController {
     @Body() createClinicalDocumentDto: CreateClinicalDocumentDto,
   ): Promise<ClinicalDocument> {
     return this.clinicalDocumentsService.create(createClinicalDocumentDto);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', multerConfigClinicalDocuments))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({
+    summary: 'Upload a clinical document file',
+    description:
+      'Upload a clinical document file (PDF, DOC, DOCX, images, etc.) for a patient. The file will be stored in uploads/clinical_documents folder.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Document file to upload',
+        },
+        patient_id: {
+          type: 'number',
+          description: 'ID of the patient',
+          example: 1,
+        },
+        appointment_id: {
+          type: 'number',
+          description: 'ID of the appointment',
+          example: 1,
+        },
+        document_type: {
+          type: 'string',
+          description: 'Type of clinical document',
+          example: 'Discharge Summary',
+        },
+        consent_version: {
+          type: 'string',
+          description: 'Version of the consent form',
+          example: 'Consent Form v2.1',
+        },
+        case_sheet: {
+          type: 'string',
+          description: 'Case sheet information',
+          example: 'Case sheet details',
+        },
+      },
+      required: ['file', 'patient_id', 'appointment_id', 'document_type', 'consent_version'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Clinical document file uploaded successfully.',
+    type: ClinicalDocument,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid file type or missing file.',
+  })
+  async uploadDocument(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('patient_id') patient_id: string,
+    @Body('appointment_id') appointment_id: string,
+    @Body('document_type') document_type: string,
+    @Body('consent_version') consent_version: string,
+    @Body('case_sheet') case_sheet?: string,
+  ): Promise<ClinicalDocument> {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    // Normalize file path to use forward slashes for web URLs
+    const normalizedPath = file.path.replace(/\\/g, '/');
+
+    const createClinicalDocumentDto: CreateClinicalDocumentDto = {
+      patient_id: parseInt(patient_id, 10),
+      appointment_id: parseInt(appointment_id, 10),
+      document_type,
+      consent_version,
+      file_path: normalizedPath,
+      case_sheet,
+    };
+
+    const result = await this.clinicalDocumentsService.create(createClinicalDocumentDto);
+
+    // Add a helpful public URL for accessing the document
+    const filename = file.filename;
+    const publicUrl = `/api/v1/clinical-documents/file/${filename}`;
+
+    return {
+      ...result,
+      publicUrl, // Add this for convenience
+    } as any;
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @Post('upload-multiple')
+  @UseInterceptors(FilesInterceptor('files', 10, multerConfigClinicalDocuments)) // Max 10 files
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({
+    summary: 'Upload multiple clinical document files',
+    description:
+      'Upload multiple clinical document files for a patient in a single request. Maximum 10 files per request.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+          description: 'Array of document files to upload (max 10)',
+        },
+        patient_id: {
+          type: 'number',
+          description: 'ID of the patient',
+          example: 1,
+        },
+        appointment_id: {
+          type: 'number',
+          description: 'ID of the appointment',
+          example: 1,
+        },
+        document_type: {
+          type: 'string',
+          description: 'Type of clinical document',
+          example: 'Lab Report',
+        },
+        consent_version: {
+          type: 'string',
+          description: 'Version of the consent form',
+          example: 'Consent Form v2.1',
+        },
+        case_sheet: {
+          type: 'string',
+          description: 'Case sheet information',
+          example: 'Case sheet details',
+        },
+      },
+      required: ['files', 'patient_id', 'appointment_id', 'document_type', 'consent_version'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Clinical document files uploaded successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        uploadedCount: {
+          type: 'number',
+          example: 3,
+        },
+        documents: {
+          type: 'array',
+          items: {
+            type: 'object',
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid file type or no files uploaded.',
+  })
+  async uploadMultipleDocuments(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body('patient_id') patient_id: string,
+    @Body('appointment_id') appointment_id: string,
+    @Body('document_type') document_type: string,
+    @Body('consent_version') consent_version: string,
+    @Body('case_sheet') case_sheet?: string,
+  ): Promise<any> {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No files uploaded');
+    }
+
+    const uploadedDocuments: any[] = [];
+
+    for (const file of files) {
+      // Normalize file path to use forward slashes for web URLs
+      const normalizedPath = file.path.replace(/\\/g, '/');
+
+      const createClinicalDocumentDto: CreateClinicalDocumentDto = {
+        patient_id: parseInt(patient_id, 10),
+        appointment_id: parseInt(appointment_id, 10),
+        document_type,
+        consent_version,
+        file_path: normalizedPath,
+        case_sheet,
+      };
+
+      const result = await this.clinicalDocumentsService.create(createClinicalDocumentDto);
+
+      // Add public URL for accessing the document
+      const filename = file.filename;
+      const publicUrl = `/api/v1/clinical-documents/file/${filename}`;
+
+      uploadedDocuments.push({
+        ...result,
+        publicUrl,
+      });
+    }
+
+    return {
+      uploadedCount: uploadedDocuments.length,
+      documents: uploadedDocuments,
+    };
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
