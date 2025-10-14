@@ -10,7 +10,14 @@ import {
   Query,
   ParseIntPipe,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  UploadedFiles,
+  BadRequestException,
+  Res,
+  NotFoundException,
 } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { PatientImagesService } from './patient-images.service';
 import { PatientImage } from './entities/patient-image.entity';
 import { CreatePatientImageDto } from './dto/create-patient-image.dto';
@@ -19,6 +26,7 @@ import { Roles } from 'src/Auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/Auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/Auth/guards/roles.guard';
 import { StaffRole } from 'src/common/enums/status.enums';
+import { Public } from 'src/Auth/decorators/public.decorator';
 import {
   ApiTags,
   ApiOperation,
@@ -26,15 +34,22 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiConsumes,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { multerConfig } from './multer.config';
+import type { Response } from 'express';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 @ApiTags('patient-images')
 @Controller('patient-images')
 export class PatientImagesController {
-  constructor(private readonly patientImagesService: PatientImagesService) {}
+  constructor(private readonly patientImagesService: PatientImagesService) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
     summary: 'Get all patient images',
@@ -71,8 +86,39 @@ export class PatientImagesController {
     return this.patientImagesService.findAll(offsetNum, limitNum);
   }
 
+  @Public()
+  @Get('file/:filename')
+  @ApiOperation({
+    summary: 'Get patient image file (Public)',
+    description:
+      'Publicly accessible endpoint to retrieve patient image files.',
+  })
+  @ApiParam({
+    name: 'filename',
+    description: 'Image filename',
+    example: 'patient-image-1760427321860-666227675.jpg',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Image file retrieved successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Image file not found.' })
+  async getImageFile(
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ) {
+    const filePath = join(process.cwd(), 'uploads', 'patient-images', filename);
+
+    if (!existsSync(filePath)) {
+      throw new NotFoundException('Image file not found');
+    }
+
+    return res.sendFile(filePath);
+  }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
     summary: 'Get patient image by ID',
@@ -96,6 +142,7 @@ export class PatientImagesController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
     summary: 'Create a new patient image record',
@@ -120,6 +167,208 @@ export class PatientImagesController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', multerConfig))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({
+    summary: 'Upload a patient image file',
+    description:
+      'Upload a medical image file (X-ray, MRI, CT scan, etc.) for a patient. The file will be stored in uploads/patient-images folder.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Image file to upload',
+        },
+        patient_id: {
+          type: 'number',
+          description: 'ID of the patient',
+          example: 1,
+        },
+        image_type: {
+          type: 'string',
+          description: 'Type of medical image (e.g., X-ray, MRI, CT scan)',
+          example: 'X-ray',
+        },
+        uploaded_by_staff_id: {
+          type: 'number',
+          description: 'ID of the staff member uploading the image',
+          example: 1,
+        },
+        notes: {
+          type: 'string',
+          description: 'Additional notes about the image',
+          example: 'Chest X-ray showing normal lung fields',
+        },
+      },
+      required: ['file', 'patient_id', 'image_type', 'uploaded_by_staff_id'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Patient image file uploaded successfully.',
+    type: PatientImage,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid file type or missing file.',
+  })
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('patient_id') patient_id: string,
+    @Body('image_type') image_type: string,
+    @Body('uploaded_by_staff_id') uploaded_by_staff_id: string,
+    @Body('notes') notes?: string,
+  ): Promise<PatientImage> {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    // Normalize file path to use forward slashes for web URLs
+    const normalizedPath = file.path.replace(/\\/g, '/');
+
+    const createPatientImageDto: CreatePatientImageDto = {
+      patient_id: parseInt(patient_id, 10),
+      image_type,
+      file_path: normalizedPath,
+      uploaded_by_staff_id: parseInt(uploaded_by_staff_id, 10),
+      notes,
+    };
+
+    const result = await this.patientImagesService.create(createPatientImageDto);
+
+    // Add a helpful public URL for accessing the image
+    // Note: Use /patient-images/file/:filename endpoint to access images
+    const filename = file.filename;
+    const publicUrl = `/patient-images/file/${filename}`;
+
+    return {
+      ...result,
+      publicUrl, // Add this for convenience
+    } as any;
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @Post('upload-multiple')
+  @UseInterceptors(FilesInterceptor('files', 10, multerConfig)) // Max 10 files
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({
+    summary: 'Upload multiple patient image files',
+    description:
+      'Upload multiple medical image files (X-ray, MRI, CT scan, etc.) for a patient in a single request. Maximum 10 files per request.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+          description: 'Array of image files to upload (max 10)',
+        },
+        patient_id: {
+          type: 'number',
+          description: 'ID of the patient',
+          example: 1,
+        },
+        image_type: {
+          type: 'string',
+          description: 'Type of medical image (e.g., X-ray, MRI, CT scan)',
+          example: 'X-ray',
+        },
+        uploaded_by_staff_id: {
+          type: 'number',
+          description: 'ID of the staff member uploading the images',
+          example: 1,
+        },
+        notes: {
+          type: 'string',
+          description: 'Additional notes about the images',
+          example: 'Multiple chest X-ray views',
+        },
+      },
+      required: ['files', 'patient_id', 'image_type', 'uploaded_by_staff_id'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Patient image files uploaded successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        uploadedCount: {
+          type: 'number',
+          example: 3,
+        },
+        images: {
+          type: 'array',
+          items: {
+            type: 'object',
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid file type or no files uploaded.',
+  })
+  async uploadMultipleImages(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body('patient_id') patient_id: string,
+    @Body('image_type') image_type: string,
+    @Body('uploaded_by_staff_id') uploaded_by_staff_id: string,
+    @Body('notes') notes?: string,
+  ): Promise<any> {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No files uploaded');
+    }
+
+    const uploadedImages: any[] = [];
+
+    for (const file of files) {
+      // Normalize file path to use forward slashes for web URLs
+      const normalizedPath = file.path.replace(/\\/g, '/');
+
+      const createPatientImageDto: CreatePatientImageDto = {
+        patient_id: parseInt(patient_id, 10),
+        image_type,
+        file_path: normalizedPath,
+        uploaded_by_staff_id: parseInt(uploaded_by_staff_id, 10),
+        notes,
+      };
+
+      const result = await this.patientImagesService.create(createPatientImageDto);
+
+      // Add public URL for accessing the image
+      const filename = file.filename;
+      const publicUrl = `/patient-images/file/${filename}`;
+
+      uploadedImages.push({
+        ...result,
+        publicUrl,
+      });
+    }
+
+    return {
+      uploadedCount: uploadedImages.length,
+      images: uploadedImages,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update patient image record',
@@ -150,6 +399,7 @@ export class PatientImagesController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete patient image record',

@@ -25,16 +25,18 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { TreatmentPlans } from './entities/treatment-plans.entity';
 
 @ApiTags('treatment-plans')
 @Controller('treatment-plans')
 export class TreatmentPlansController {
-  constructor(private readonly treatmentplansService: TreatmentPlansService) {}
+  constructor(private readonly treatmentplansService: TreatmentPlansService) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
     summary: 'Create a new treatment plan',
@@ -58,6 +60,7 @@ export class TreatmentPlansController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
     summary: 'Get all treatment plans',
@@ -97,6 +100,7 @@ export class TreatmentPlansController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
     summary: 'Get treatment plan by ID',
@@ -123,6 +127,7 @@ export class TreatmentPlansController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update treatment plan',
@@ -152,6 +157,7 @@ export class TreatmentPlansController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete treatment plan',

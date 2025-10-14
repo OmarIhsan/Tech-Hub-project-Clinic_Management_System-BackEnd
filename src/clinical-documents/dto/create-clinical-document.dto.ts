@@ -55,4 +55,14 @@ export class CreateClinicalDocumentDto {
   @IsString()
   @IsOptional()
   file_path?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'case sheet Image or URL to the stored clinical document, if available.',
+    example: '/documents/clinical/12345.pdf',
+    maxLength: 100,
+  })
+  @IsString()
+  @IsOptional()
+  case_sheet?: string;
 }

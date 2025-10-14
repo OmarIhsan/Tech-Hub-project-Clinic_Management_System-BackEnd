@@ -25,16 +25,18 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Appointment } from './entities/appointments.entity';
 
 @ApiTags('appointment')
 @Controller('appointment')
 export class AppointmentController {
-  constructor(private readonly appointmentService: AppointmentService) {}
+  constructor(private readonly appointmentService: AppointmentService) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
     summary: 'Create a new appointment',
@@ -61,6 +63,7 @@ export class AppointmentController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
     summary: 'Get all appointments',
@@ -98,6 +101,7 @@ export class AppointmentController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
     summary: 'Get appointment by ID',
@@ -124,6 +128,7 @@ export class AppointmentController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update appointment',
@@ -152,6 +157,7 @@ export class AppointmentController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete appointment',

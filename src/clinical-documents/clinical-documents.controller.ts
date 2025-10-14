@@ -26,6 +26,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 
 @ApiTags('clinical-documents')
@@ -33,10 +34,11 @@ import {
 export class ClinicalDocumentsController {
   constructor(
     private readonly clinicalDocumentsService: ClinicalDocumentsService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
     summary: 'Get all clinical documents',
@@ -75,6 +77,7 @@ export class ClinicalDocumentsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
     summary: 'Get clinical document by ID',
@@ -101,6 +104,7 @@ export class ClinicalDocumentsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
     summary: 'Create a new clinical document',
@@ -124,6 +128,7 @@ export class ClinicalDocumentsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update clinical document',
@@ -154,6 +159,7 @@ export class ClinicalDocumentsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete clinical document',

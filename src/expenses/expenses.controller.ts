@@ -26,15 +26,17 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 
 @ApiTags('expenses')
 @Controller('expenses')
 export class ExpensesController {
-  constructor(private readonly expensesService: ExpensesService) {}
+  constructor(private readonly expensesService: ExpensesService) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
     summary: 'Get all expenses',
@@ -75,6 +77,7 @@ export class ExpensesController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
     summary: 'Get expense by ID',
@@ -99,6 +102,7 @@ export class ExpensesController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
     summary: 'Create a new expense record',
@@ -122,6 +126,7 @@ export class ExpensesController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update expense record',
@@ -151,6 +156,7 @@ export class ExpensesController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete expense record',

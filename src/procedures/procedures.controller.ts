@@ -25,16 +25,18 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Procedures } from './entities/procedures.entity';
 
 @ApiTags('procedures')
 @Controller('procedures')
 export class ProceduresController {
-  constructor(private readonly proceduresService: ProceduresService) {}
+  constructor(private readonly proceduresService: ProceduresService) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
     summary: 'Create a new medical procedure record',
@@ -59,6 +61,7 @@ export class ProceduresController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
     summary: 'Get all procedures',
@@ -98,6 +101,7 @@ export class ProceduresController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
     summary: 'Get procedure by ID',
@@ -125,6 +129,7 @@ export class ProceduresController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update procedure record',
@@ -154,6 +159,7 @@ export class ProceduresController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete procedure record',

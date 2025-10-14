@@ -25,16 +25,18 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { MedicalRecords } from './entities/medical-records.entity';
 
 @ApiTags('medical-records')
 @Controller('medical-records')
 export class MedicalRecordsController {
-  constructor(private readonly medicalRecordsService: MedicalRecordsService) {}
+  constructor(private readonly medicalRecordsService: MedicalRecordsService) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
     summary: 'Create a new medical record',
@@ -59,6 +61,7 @@ export class MedicalRecordsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
     summary: 'Get all medical records',
@@ -99,6 +102,7 @@ export class MedicalRecordsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
     summary: 'Get medical record by ID',
@@ -124,6 +128,7 @@ export class MedicalRecordsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update medical record',
@@ -157,6 +162,7 @@ export class MedicalRecordsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete medical record',

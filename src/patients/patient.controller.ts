@@ -24,6 +24,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
@@ -31,10 +32,11 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 @ApiTags('patients')
 @Controller('patients')
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) {}
+  constructor(private readonly patientsService: PatientsService) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
     summary: 'Get all patients',
@@ -72,6 +74,7 @@ export class PatientsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
     summary: 'Get patient by ID',
@@ -95,6 +98,7 @@ export class PatientsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
     summary: 'Create a new patient record',
@@ -118,6 +122,7 @@ export class PatientsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update patient record',
@@ -146,6 +151,7 @@ export class PatientsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete patient record',

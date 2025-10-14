@@ -28,15 +28,15 @@ export class CreatePatientImageDto {
   @Length(2, 50)
   image_type: string;
 
-  @ApiProperty({
-    description: 'File path or URL to the stored medical image.',
+  @ApiPropertyOptional({
+    description: 'File path or URL to the stored medical image. (Auto-generated when uploading file)',
     example: '/images/patient/ctscan_12345.png',
-    maxLength: 100,
+    maxLength: 255,
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(100)
-  file_path: string;
+  @MaxLength(255)
+  file_path?: string;
 
   @ApiProperty({
     description: 'ID of the staff member who uploaded the image.',

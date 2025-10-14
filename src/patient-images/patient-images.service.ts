@@ -6,13 +6,15 @@ import { Repository } from 'typeorm';
 import { PatientImage } from './entities/patient-image.entity';
 import { CreatePatientImageDto } from './dto/create-patient-image.dto';
 import { UpdatePatientImageDto } from './dto/update-patient-image.dto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class PatientImagesService {
   constructor(
     @InjectRepository(PatientImage)
     private readonly patientImageRepo: Repository<PatientImage>,
-  ) {}
+  ) { }
 
   findAll(offset?: number, limit?: number): Promise<PatientImage[]> {
     return this.patientImageRepo.find({
@@ -46,6 +48,19 @@ export class PatientImagesService {
 
   async remove(id: number): Promise<void> {
     const patientImage = await this.findOne(id);
+
+    // Delete the physical file if it exists
+    if (patientImage.file_path) {
+      const filePath = path.join(process.cwd(), patientImage.file_path);
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath);
+        } catch (error) {
+          console.error('Error deleting file:', error);
+        }
+      }
+    }
+
     await this.patientImageRepo.remove(patientImage);
   }
 }

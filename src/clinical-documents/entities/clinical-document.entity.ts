@@ -29,6 +29,10 @@ export class ClinicalDocument {
   @Column({ type: 'text' })
   file_path: string;
 
+
+  @Column({ type: 'text', nullable: true })
+  case_sheet: string;
+
   @ManyToOne(() => Patient)
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;

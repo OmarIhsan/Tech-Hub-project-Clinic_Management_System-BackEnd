@@ -20,7 +20,7 @@ export class Staff {
   @Column({ length: 100 })
   full_name: string;
 
-  @Column({ length: 20, default: 'N/A' })
+  @Column({ length: 20, nullable: true })
   phone: string;
 
   @Column({ length: 100 })
@@ -49,4 +49,7 @@ export class Staff {
 
   @OneToMany(() => PatientImage, (img) => img.uploadedByStaff)
   uploadedImages: PatientImage[];
+  
+
+
 }
