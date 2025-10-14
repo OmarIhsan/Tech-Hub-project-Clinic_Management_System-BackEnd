@@ -13,7 +13,13 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Enable CORS for accessing images from browser
-  app.enableCors();
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
+    credentials: true,
+  });
+
+  // Set global API prefix for versioning
+  app.setGlobalPrefix('api/v1');
 
   // Note: Static file serving removed - use /patient-images/file/:filename endpoint instead
   // This allows proper access control through the @Public() decorator
@@ -49,7 +55,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('api/v1/docs', app, document);
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -59,7 +65,7 @@ async function bootstrap() {
   );
 
   await app.listen(process.env.PORT ?? 3000);
-  console.log(`🚀 API running on http://localhost:${process.env.PORT ?? 3000}`);
-  console.log(`🚀 Swagger docs running on http://localhost:${process.env.PORT ?? 3000}/api/docs`);
+  console.log(`🚀 API running on http://localhost:${process.env.PORT ?? 3000}/api/v1`);
+  console.log(`🚀 Swagger docs running on http://localhost:${process.env.PORT ?? 3000}/api/v1/docs`);
 }
 bootstrap();

@@ -17,13 +17,13 @@ export enum StaffRole {
   SUPER_ADMIN = 'super_admin',
   ADMIN = 'admin',
   STAFF = 'staff',
-  CUSTUMER = 'custumer',
+  CUSTOMER = 'customer',
 }
 
 export enum Gender {
   Male = 'Male',
   Female = 'Female',
-  
+
 }
 
 // Extend here for other status-based columns if needed.

@@ -34,7 +34,7 @@ import { LoggerMiddleware } from './common/middlewares/login.middleware';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         autoLoadEntities: true,
-        synchronize: true, // Set to false in production
+        synchronize: configService.get('NODE_ENV') !== 'production',
       }),
       inject: [ConfigService],
     }),

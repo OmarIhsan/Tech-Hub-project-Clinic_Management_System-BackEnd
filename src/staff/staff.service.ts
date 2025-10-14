@@ -21,7 +21,7 @@ export class StaffService {
   constructor(
     @InjectRepository(Staff)
     private readonly staffRepo: Repository<Staff>,
-  ) {}
+  ) { }
 
   findAll(offset?: number, limit?: number): Promise<Staff[]> {
     return this.staffRepo.find();
@@ -43,7 +43,7 @@ export class StaffService {
     }
 
     if (!data.role) {
-      data.role = StaffRole.CUSTUMER;
+      data.role = StaffRole.CUSTOMER;
     }
 
     if (data.email) {

@@ -25,5 +25,5 @@ export class RegisterDto {
 
   @IsEnum(StaffRole)
   @IsOptional()
-  role?: StaffRole = StaffRole.CUSTUMER;
+  role?: StaffRole = StaffRole.CUSTOMER;
 }

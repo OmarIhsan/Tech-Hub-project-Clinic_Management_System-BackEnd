@@ -10,10 +10,14 @@ export class PatientsService {
   constructor(
     @InjectRepository(Patient)
     private readonly patientRepo: Repository<Patient>,
-  ) {}
+  ) { }
 
   findAll(offset?: number, limit?: number): Promise<Patient[]> {
-    return this.patientRepo.find();
+    return this.patientRepo.find({
+      skip: offset || 0,
+      take: limit || 10,
+      order: { created_at: 'DESC' },
+    });
   }
 
   async findOne(id: number): Promise<Patient> {

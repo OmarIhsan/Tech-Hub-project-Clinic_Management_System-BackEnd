@@ -29,7 +29,7 @@ export class Staff {
   @Column({ type: 'date', nullable: true })
   hire_date: Date;
 
-  @Column({ default: StaffRole.CUSTUMER })
+  @Column({ default: StaffRole.CUSTOMER })
   role: StaffRole;
 
   @Column()
@@ -49,7 +49,7 @@ export class Staff {
 
   @OneToMany(() => PatientImage, (img) => img.uploadedByStaff)
   uploadedImages: PatientImage[];
-  
+
 
 
 }

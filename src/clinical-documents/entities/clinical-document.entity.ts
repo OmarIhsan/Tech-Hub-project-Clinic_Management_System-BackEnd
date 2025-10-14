@@ -30,7 +30,7 @@ export class ClinicalDocument {
   file_path: string;
 
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ nullable: true })
   case_sheet: string;
 
   @ManyToOne(() => Patient)
