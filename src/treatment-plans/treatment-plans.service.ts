@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -17,11 +15,10 @@ export class TreatmentPlansService {
   async create(
     createTreatmentPlanDto: CreateTreatmentPlansDto,
   ): Promise<TreatmentPlans> {
-    // Convert prescription string to Buffer if it exists
     const treatmentPlanData = {
       ...createTreatmentPlanDto,
       prescription: createTreatmentPlanDto.prescription
-        ? Buffer.from(createTreatmentPlanDto.prescription, 'base64') // adjust encoding if needed
+        ? Buffer.from(createTreatmentPlanDto.prescription, 'base64')
         : undefined,
     };
 

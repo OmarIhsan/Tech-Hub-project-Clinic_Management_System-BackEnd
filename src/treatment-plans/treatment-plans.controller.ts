@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -32,7 +31,7 @@ import { TreatmentPlans } from './entities/treatment-plans.entity';
 @ApiTags('treatment-plans')
 @Controller('treatment-plans')
 export class TreatmentPlansController {
-  constructor(private readonly treatmentplansService: TreatmentPlansService) { }
+  constructor(private readonly treatmentplansService: TreatmentPlansService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
@@ -89,7 +88,6 @@ export class TreatmentPlansController {
     @Query('offset') offset?: string,
     @Query('limit') limit?: string,
   ) {
-    // Safely parse query parameters, defaulting to 0 and 10
     const offsetNum =
       offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
     const limitNum =

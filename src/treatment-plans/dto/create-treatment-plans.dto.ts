@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsInt,
@@ -47,7 +46,7 @@ export class CreateTreatmentPlansDto {
 
   @ApiPropertyOptional({
     description: 'Prescription details or file.',
-    example: 'Paracetamol 500mg twice daily for 5 days', // (e.g., medication list, PDF, or image)
+    example: 'Paracetamol 500mg twice daily for 5 days',
     maxLength: 100,
   })
   @IsOptional()
@@ -58,7 +57,6 @@ export class CreateTreatmentPlansDto {
   @ApiProperty({
     description: 'Detailed description of the treatment plan, .',
     example: 'Bed rest and medication as prescribed',
-    //e.g., "Bed rest, hydration, and medication as prescribed"
     maxLength: 100,
   })
   @IsString()
