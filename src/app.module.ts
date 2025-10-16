@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { PatientsModule } from './patients/patient.module';
 import { StaffModule } from './staff/staff.module';
 import { OtherIncomesModule } from './other-incomes/other-incomes.module';
@@ -23,19 +23,20 @@ import { LoggerMiddleware } from './common/middlewares/login.middleware';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
-        autoLoadEntities: true,
-        synchronize: configService.get('NODE_ENV') !== 'production',
-      }),
-      inject: [ConfigService],
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '5432', 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      autoLoadEntities: true,
+      synchronize: process.env.NODE_ENV !== 'production',
+      logging: false,
+      extra: {
+        connectionLimit: 1,
+        connectTimeout: 10000,
+      },
     }),
     PatientsModule,
     StaffModule,
