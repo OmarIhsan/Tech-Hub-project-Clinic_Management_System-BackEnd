@@ -32,10 +32,10 @@ import { Procedures } from './entities/procedures.entity';
 @ApiTags('procedures')
 @Controller('procedures')
 export class ProceduresController {
-  constructor(private readonly proceduresService: ProceduresService) { }
+  constructor(private readonly proceduresService: ProceduresService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
@@ -60,7 +60,7 @@ export class ProceduresController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
@@ -100,7 +100,7 @@ export class ProceduresController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
@@ -128,7 +128,7 @@ export class ProceduresController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
@@ -158,7 +158,7 @@ export class ProceduresController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({

@@ -14,16 +14,14 @@ export enum TreatmentPlanStatus {
 }
 
 export enum StaffRole {
-  SUPER_ADMIN = 'super_admin',
-  ADMIN = 'admin',
+  OWNER = 'owner',
+  DOCTOR = 'doctor',
   STAFF = 'staff',
-  CUSTOMER = 'customer',
 }
 
 export enum Gender {
   Male = 'Male',
   Female = 'Female',
-
 }
 
 // Extend here for other status-based columns if needed.

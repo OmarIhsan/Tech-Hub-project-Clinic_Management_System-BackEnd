@@ -1,4 +1,5 @@
+/* eslint-disable prettier/prettier */
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateExpenseDto } from './create-expense.dto';
 
-export class UpdateExpenseDto extends PartialType(CreateExpenseDto) { }
+export class UpdateExpenseDto extends PartialType(CreateExpenseDto) {}

@@ -32,10 +32,10 @@ import { Doctors } from './entities/doctors.entity';
 @ApiTags('doctors')
 @Controller('doctors')
 export class DoctorsController {
-  constructor(private readonly doctorsService: DoctorsService) { }
+  constructor(private readonly doctorsService: DoctorsService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
@@ -58,7 +58,7 @@ export class DoctorsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
@@ -98,7 +98,7 @@ export class DoctorsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
@@ -126,7 +126,7 @@ export class DoctorsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
@@ -155,7 +155,7 @@ export class DoctorsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({

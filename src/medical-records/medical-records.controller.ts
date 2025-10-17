@@ -32,10 +32,10 @@ import { MedicalRecords } from './entities/medical-records.entity';
 @ApiTags('medical-records')
 @Controller('medical-records')
 export class MedicalRecordsController {
-  constructor(private readonly medicalRecordsService: MedicalRecordsService) { }
+  constructor(private readonly medicalRecordsService: MedicalRecordsService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
@@ -60,7 +60,7 @@ export class MedicalRecordsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
@@ -101,7 +101,7 @@ export class MedicalRecordsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
@@ -127,7 +127,7 @@ export class MedicalRecordsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
@@ -161,7 +161,7 @@ export class MedicalRecordsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
