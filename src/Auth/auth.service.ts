@@ -40,8 +40,7 @@ export class AuthService {
     const payload = { sub: user.staff_id, email: user.email, role: user.role };
     const access_token = this.jwtService.sign(payload);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _password, ...userWithoutPassword } = user;
+    const userWithoutPassword = this.excludePassword(user);
 
     return {
       user: userWithoutPassword,
@@ -67,8 +66,7 @@ export class AuthService {
     const payload = { sub: user.staff_id, email: user.email, role: user.role };
     const access_token = this.jwtService.sign(payload);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _userPassword, ...userWithoutPassword } = user;
+    const userWithoutPassword = this.excludePassword(user);
 
     return {
       user: userWithoutPassword,
@@ -82,13 +80,11 @@ export class AuthService {
   ): Promise<{ message: string }> {
     const { currentPassword, newPassword } = changePasswordDto;
 
-    // Find user
     const user = await this.staffService.findOne(userId);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
 
-    // Verify current password
     const isCurrentPasswordValid = await bcrypt.compare(
       currentPassword,
       user.password,
@@ -97,12 +93,16 @@ export class AuthService {
       throw new BadRequestException('Current password is incorrect');
     }
 
-    // Hash new password
     const hashedNewPassword = await bcrypt.hash(newPassword, 12);
 
-    // Update password
     await this.staffService.updatePassword(userId, hashedNewPassword);
 
     return { message: 'Password changed successfully' };
+  }
+
+  private excludePassword(user: Staff): Partial<Staff> {
+    /* eslint-disable */
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }

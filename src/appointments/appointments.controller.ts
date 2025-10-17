@@ -89,7 +89,6 @@ export class AppointmentController {
     @Query('offset') offset?: string,
     @Query('limit') limit?: string,
   ) {
-    // Safely parse query parameters, defaulting to 0 and 10
     const offsetNum =
       offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
     const limitNum =
