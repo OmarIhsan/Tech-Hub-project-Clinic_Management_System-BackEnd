@@ -28,7 +28,7 @@ export class Staff {
   @Column({ type: 'date', nullable: true })
   hire_date: Date;
 
-  @Column({ default: StaffRole.CUSTOMER })
+  @Column({ default: StaffRole.STAFF })
   role: StaffRole;
 
   @Column()
