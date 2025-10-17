@@ -22,7 +22,7 @@ export class AuthService {
   async register(
     registerDto: RegisterDto,
   ): Promise<{ user: Partial<Staff>; access_token: string }> {
-    const { email, password, full_name, role } = registerDto;
+    const { email, password, full_name, phone, role } = registerDto;
 
     const existingUser = await this.staffService.findByEmail(email);
     if (existingUser) {
@@ -32,6 +32,7 @@ export class AuthService {
     const user = await this.staffService.create({
       email,
       full_name,
+      phone,
       password: password,
       role,
     });

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateClinicalDocumentDto } from './create-clinical-document.dto';
 

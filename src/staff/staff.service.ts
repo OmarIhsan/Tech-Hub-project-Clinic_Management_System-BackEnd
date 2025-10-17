@@ -39,7 +39,7 @@ export class StaffService {
     }
 
     if (!data.role) {
-      data.role = StaffRole.CUSTOMER;
+      data.role = StaffRole.STAFF;
     }
 
     if (data.email) {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,6 +17,8 @@ export class PatientImagesService {
   findAll(offset?: number, limit?: number): Promise<PatientImage[]> {
     return this.patientImageRepo.find({
       relations: ['patient', 'uploadedByStaff'],
+      skip: offset,
+      take: limit,
     });
   }
 
