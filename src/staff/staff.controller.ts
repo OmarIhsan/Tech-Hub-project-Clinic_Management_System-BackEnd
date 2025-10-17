@@ -32,10 +32,10 @@ import {
 @ApiTags('staff')
 @Controller('staff')
 export class StaffController {
-  constructor(private readonly staffService: StaffService) { }
+  constructor(private readonly staffService: StaffService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
@@ -75,7 +75,7 @@ export class StaffController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
@@ -99,7 +99,7 @@ export class StaffController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
@@ -123,7 +123,7 @@ export class StaffController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
@@ -149,7 +149,7 @@ export class StaffController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({

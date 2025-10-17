@@ -1,4 +1,7 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/require-await */
+
 import {
   Controller,
   Get,
@@ -45,10 +48,10 @@ import { existsSync } from 'fs';
 @ApiTags('patient-images')
 @Controller('patient-images')
 export class PatientImagesController {
-  constructor(private readonly patientImagesService: PatientImagesService) { }
+  constructor(private readonly patientImagesService: PatientImagesService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
@@ -117,7 +120,7 @@ export class PatientImagesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
@@ -141,7 +144,7 @@ export class PatientImagesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
@@ -166,7 +169,7 @@ export class PatientImagesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', multerConfig))
@@ -240,7 +243,9 @@ export class PatientImagesController {
       notes,
     };
 
-    const result = await this.patientImagesService.create(createPatientImageDto);
+    const result = await this.patientImagesService.create(
+      createPatientImageDto,
+    );
 
     // Add a helpful public URL for accessing the image
     // Note: Use /patient-images/file/:filename endpoint to access images
@@ -254,7 +259,7 @@ export class PatientImagesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post('upload-multiple')
   @UseInterceptors(FilesInterceptor('files', 10, multerConfig)) // Max 10 files
@@ -348,7 +353,9 @@ export class PatientImagesController {
         notes,
       };
 
-      const result = await this.patientImagesService.create(createPatientImageDto);
+      const result = await this.patientImagesService.create(
+        createPatientImageDto,
+      );
 
       // Add public URL for accessing the image
       const filename = file.filename;
@@ -367,7 +374,7 @@ export class PatientImagesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
@@ -398,7 +405,7 @@ export class PatientImagesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({

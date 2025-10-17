@@ -1,4 +1,7 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
 import {
   Controller,
   Get,
@@ -47,10 +50,10 @@ import { existsSync } from 'fs';
 export class ClinicalDocumentsController {
   constructor(
     private readonly clinicalDocumentsService: ClinicalDocumentsService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
@@ -109,7 +112,12 @@ export class ClinicalDocumentsController {
     @Param('filename') filename: string,
     @Res() res: Response,
   ) {
-    const filePath = join(process.cwd(), 'uploads', 'clinical_documents', filename);
+    const filePath = join(
+      process.cwd(),
+      'uploads',
+      'clinical_documents',
+      filename,
+    );
 
     if (!existsSync(filePath)) {
       throw new NotFoundException('Document file not found');
@@ -119,7 +127,7 @@ export class ClinicalDocumentsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
@@ -146,7 +154,7 @@ export class ClinicalDocumentsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
@@ -170,7 +178,7 @@ export class ClinicalDocumentsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', multerConfigClinicalDocuments))
@@ -215,7 +223,13 @@ export class ClinicalDocumentsController {
           example: 'Case sheet details',
         },
       },
-      required: ['file', 'patient_id', 'appointment_id', 'document_type', 'consent_version'],
+      required: [
+        'file',
+        'patient_id',
+        'appointment_id',
+        'document_type',
+        'consent_version',
+      ],
     },
   })
   @ApiResponse({
@@ -251,7 +265,9 @@ export class ClinicalDocumentsController {
       case_sheet,
     };
 
-    const result = await this.clinicalDocumentsService.create(createClinicalDocumentDto);
+    const result = await this.clinicalDocumentsService.create(
+      createClinicalDocumentDto,
+    );
 
     // Add a helpful public URL for accessing the document
     const filename = file.filename;
@@ -264,7 +280,7 @@ export class ClinicalDocumentsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post('upload-multiple')
   @UseInterceptors(FilesInterceptor('files', 10, multerConfigClinicalDocuments)) // Max 10 files
@@ -312,7 +328,13 @@ export class ClinicalDocumentsController {
           example: 'Case sheet details',
         },
       },
-      required: ['files', 'patient_id', 'appointment_id', 'document_type', 'consent_version'],
+      required: [
+        'files',
+        'patient_id',
+        'appointment_id',
+        'document_type',
+        'consent_version',
+      ],
     },
   })
   @ApiResponse({
@@ -365,7 +387,9 @@ export class ClinicalDocumentsController {
         case_sheet,
       };
 
-      const result = await this.clinicalDocumentsService.create(createClinicalDocumentDto);
+      const result = await this.clinicalDocumentsService.create(
+        createClinicalDocumentDto,
+      );
 
       // Add public URL for accessing the document
       const filename = file.filename;
@@ -384,7 +408,7 @@ export class ClinicalDocumentsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
@@ -415,7 +439,7 @@ export class ClinicalDocumentsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.SUPER_ADMIN)
+  @Roles(StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   @ApiOperation({
