@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsString,
@@ -44,7 +43,7 @@ export class CreateProceduresDto {
 
   @ApiProperty({
     description: 'Name of the medical procedure performed',
-    example: 'Appendectomy', // e.g., "Appendectomy", "Colonoscopy".
+    example: 'Appendectomy',
     maxLength: 100,
   })
   @IsString()

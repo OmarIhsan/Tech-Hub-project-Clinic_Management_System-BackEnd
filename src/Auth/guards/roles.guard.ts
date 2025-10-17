@@ -1,10 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
-// guards/roles.guard.ts
 import {
   Injectable,
   CanActivate,
@@ -13,6 +6,12 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
+
+interface RequestWithUser {
+  user?: {
+    role: string;
+  };
+}
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -23,12 +22,11 @@ export class RolesGuard implements CanActivate {
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
-
+    const { user } = context.switchToHttp().getRequest<RequestWithUser>();
     if (!requiredRoles) {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest();
     if (!user || !requiredRoles.includes(user.role)) {
       throw new ForbiddenException('You do not have permission');
     }

@@ -25,7 +25,7 @@ import {
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @ApiOperation({
@@ -53,8 +53,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Login to the system',
-    description:
-      'Authenticates a staff member and returns a JWT access token.',
+    description: 'Authenticates a staff member and returns a JWT access token.',
   })
   @ApiBody({ type: LoginDto })
   @ApiResponse({

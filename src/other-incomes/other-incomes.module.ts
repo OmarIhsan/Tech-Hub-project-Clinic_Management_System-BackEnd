@@ -5,8 +5,8 @@ import { OtherIncomesController } from './other-incomes.controller';
 import { OtherIncome } from './entities/other-income.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([OtherIncome])],
-    controllers: [OtherIncomesController],
-    providers: [OtherIncomesService],
+  imports: [TypeOrmModule.forFeature([OtherIncome])],
+  controllers: [OtherIncomesController],
+  providers: [OtherIncomesService],
 })
-export class OtherIncomesModule { }
+export class OtherIncomesModule {}

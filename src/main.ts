@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -11,17 +8,12 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Enable CORS for accessing images from browser
   app.enableCors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
     credentials: true,
   });
 
-  // Set global API prefix for versioning
   app.setGlobalPrefix('api/v1');
-
-  // Note: Static file serving removed - use /patient-images/file/:filename endpoint instead
-  // This allows proper access control through the @Public() decorator
 
   app.useGlobalInterceptors(new TransformInterceptor());
   const config = new DocumentBuilder()
@@ -49,7 +41,7 @@ async function bootstrap() {
         description: 'Enter JWT token',
         in: 'header',
       },
-      'JWT-auth', // This is the security scheme name
+      'JWT-auth',
     )
     .build();
 
@@ -64,7 +56,14 @@ async function bootstrap() {
   );
 
   await app.listen(process.env.PORT ?? 3000);
-  console.log(`🚀 API running on http://localhost:${process.env.PORT ?? 3000}/api/v1`);
-  console.log(`🚀 Swagger docs running on http://localhost:${process.env.PORT ?? 3000}/api/v1/docs`);
+  console.log(
+    `🚀 API running on http://localhost:${process.env.PORT ?? 3000}/api/v1`,
+  );
+  console.log(
+    `🚀 Swagger docs running on http://localhost:${process.env.PORT ?? 3000}/api/v1/docs`,
+  );
 }
-bootstrap();
+bootstrap().catch((error) => {
+  console.error('Failed to start application:', error);
+  process.exit(1);
+});

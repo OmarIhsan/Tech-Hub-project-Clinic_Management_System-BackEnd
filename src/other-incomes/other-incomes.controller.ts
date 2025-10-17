@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -32,7 +31,7 @@ import {
 @ApiTags('other-incomes')
 @Controller('other-incomes')
 export class OtherIncomesController {
-  constructor(private readonly otherIncomesService: OtherIncomesService) { }
+  constructor(private readonly otherIncomesService: OtherIncomesService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)

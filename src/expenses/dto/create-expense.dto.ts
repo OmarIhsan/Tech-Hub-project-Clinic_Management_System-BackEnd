@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
@@ -14,7 +13,7 @@ import {
 export class CreateExpenseDto {
   @ApiProperty({
     description: 'Category of the expense',
-    example: 'Medical Supplies', //such as "Medical Supplies", "Utilities", or "Staff Meals".
+    example: 'Medical Supplies',
     maxLength: 50,
   })
   @IsString()
@@ -40,7 +39,7 @@ export class CreateExpenseDto {
 
   @ApiProperty({
     description: 'Reason for the expense',
-    example: 'Staff Meals', //such as "Staff Meals", "Equipment Purchase", or "Facility Maintenance"
+    example: 'Staff Meals',
     maxLength: 50,
   })
   @IsString()

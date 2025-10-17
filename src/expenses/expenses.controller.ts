@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -32,7 +31,7 @@ import {
 @ApiTags('expenses')
 @Controller('expenses')
 export class ExpensesController {
-  constructor(private readonly expensesService: ExpensesService) { }
+  constructor(private readonly expensesService: ExpensesService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
@@ -66,7 +65,6 @@ export class ExpensesController {
     @Query('offset') offset?: string,
     @Query('limit') limit?: string,
   ): Promise<Expense[]> {
-    // Safely parse query parameters, defaulting to 0 and 10
     const offsetNum =
       offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
     const limitNum =

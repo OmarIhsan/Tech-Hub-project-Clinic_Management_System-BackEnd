@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export enum AppointmentStatus {
   SCHEDULED = 'scheduled',
   COMPLETED = 'completed',
@@ -23,7 +22,4 @@ export enum StaffRole {
 export enum Gender {
   Male = 'Male',
   Female = 'Female',
-
 }
-
-// Extend here for other status-based columns if needed.

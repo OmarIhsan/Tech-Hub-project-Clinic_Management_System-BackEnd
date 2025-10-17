@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   IsString,
   IsInt,
@@ -27,7 +26,7 @@ export class CreateClinicalDocumentDto {
 
   @ApiProperty({
     description: 'Type of clinical document',
-    example: 'Discharge Summary', //or such as "Discharge Summary", "Progress Note", or "Lab Report".
+    example: 'Discharge Summary',
     maxLength: 50,
   })
   @IsString()

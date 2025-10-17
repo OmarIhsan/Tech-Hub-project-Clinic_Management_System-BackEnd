@@ -6,13 +6,13 @@ import { ClinicalDocumentsController } from './clinical-documents.controller';
 import { ClinicalDocument } from './entities/clinical-document.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([ClinicalDocument]),
-        MulterModule.register({
-            dest: './uploads/clinical_documents',
-        }),
-    ],
-    controllers: [ClinicalDocumentsController],
-    providers: [ClinicalDocumentsService],
+  imports: [
+    TypeOrmModule.forFeature([ClinicalDocument]),
+    MulterModule.register({
+      dest: './uploads/clinical_documents',
+    }),
+  ],
+  controllers: [ClinicalDocumentsController],
+  providers: [ClinicalDocumentsService],
 })
-export class ClinicalDocumentsModule { }
+export class ClinicalDocumentsModule {}

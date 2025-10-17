@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,7 +13,11 @@ export class OtherIncomesService {
   ) {}
 
   findAll(offset: number, limit: number): Promise<OtherIncome[]> {
-    return this.otherIncomeRepo.find({ relations: ['staff', 'patient'] });
+    return this.otherIncomeRepo.find({
+      relations: ['staff', 'patient'],
+      skip: offset,
+      take: limit,
+    });
   }
 
   async findOne(id: number): Promise<OtherIncome> {

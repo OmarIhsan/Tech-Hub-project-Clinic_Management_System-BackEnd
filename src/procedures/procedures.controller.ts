@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -32,7 +31,7 @@ import { Procedures } from './entities/procedures.entity';
 @ApiTags('procedures')
 @Controller('procedures')
 export class ProceduresController {
-  constructor(private readonly proceduresService: ProceduresService) { }
+  constructor(private readonly proceduresService: ProceduresService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
@@ -90,7 +89,6 @@ export class ProceduresController {
     @Query('offset') offset?: string,
     @Query('limit') limit?: string,
   ) {
-    // Safely parse query parameters with defaults
     const offsetNum =
       offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
     const limitNum =

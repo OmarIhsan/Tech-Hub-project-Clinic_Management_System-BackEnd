@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-// decorators/roles.decorator.ts
 import { SetMetadata } from '@nestjs/common';
 import { StaffRole } from 'src/common/enums/status.enums';
 

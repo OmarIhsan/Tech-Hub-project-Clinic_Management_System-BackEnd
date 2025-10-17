@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsString,
@@ -14,7 +13,7 @@ import {
 export class CreateOtherIncomeDto {
   @ApiProperty({
     description: 'Source of the income',
-    example: 'Event', // such as "Event", "Donation", or "Government Grant".
+    example: 'Event',
     maxLength: 50,
   })
   @IsString()

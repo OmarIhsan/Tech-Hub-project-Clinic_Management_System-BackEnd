@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -47,7 +46,7 @@ import { existsSync } from 'fs';
 export class ClinicalDocumentsController {
   constructor(
     private readonly clinicalDocumentsService: ClinicalDocumentsService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
@@ -79,7 +78,6 @@ export class ClinicalDocumentsController {
     @Query('offset') offset?: string,
     @Query('limit') limit?: string,
   ): Promise<ClinicalDocument[]> {
-    // Safely parse query parameters with defaults
     const offsetNum =
       offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
     const limitNum =
@@ -105,11 +103,13 @@ export class ClinicalDocumentsController {
     description: 'Document file retrieved successfully.',
   })
   @ApiResponse({ status: 404, description: 'Document file not found.' })
-  async getDocumentFile(
-    @Param('filename') filename: string,
-    @Res() res: Response,
-  ) {
-    const filePath = join(process.cwd(), 'uploads', 'clinical_documents', filename);
+  getDocumentFile(@Param('filename') filename: string, @Res() res: Response) {
+    const filePath = join(
+      process.cwd(),
+      'uploads',
+      'clinical_documents',
+      filename,
+    );
 
     if (!existsSync(filePath)) {
       throw new NotFoundException('Document file not found');
@@ -215,7 +215,13 @@ export class ClinicalDocumentsController {
           example: 'Case sheet details',
         },
       },
-      required: ['file', 'patient_id', 'appointment_id', 'document_type', 'consent_version'],
+      required: [
+        'file',
+        'patient_id',
+        'appointment_id',
+        'document_type',
+        'consent_version',
+      ],
     },
   })
   @ApiResponse({
@@ -234,12 +240,11 @@ export class ClinicalDocumentsController {
     @Body('document_type') document_type: string,
     @Body('consent_version') consent_version: string,
     @Body('case_sheet') case_sheet?: string,
-  ): Promise<ClinicalDocument> {
+  ): Promise<ClinicalDocument & { publicUrl: string }> {
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
 
-    // Normalize file path to use forward slashes for web URLs
     const normalizedPath = file.path.replace(/\\/g, '/');
 
     const createClinicalDocumentDto: CreateClinicalDocumentDto = {
@@ -251,16 +256,17 @@ export class ClinicalDocumentsController {
       case_sheet,
     };
 
-    const result = await this.clinicalDocumentsService.create(createClinicalDocumentDto);
+    const result = await this.clinicalDocumentsService.create(
+      createClinicalDocumentDto,
+    );
 
-    // Add a helpful public URL for accessing the document
     const filename = file.filename;
     const publicUrl = `/api/v1/clinical-documents/file/${filename}`;
 
     return {
       ...result,
-      publicUrl, // Add this for convenience
-    } as any;
+      publicUrl,
+    };
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -312,7 +318,13 @@ export class ClinicalDocumentsController {
           example: 'Case sheet details',
         },
       },
-      required: ['files', 'patient_id', 'appointment_id', 'document_type', 'consent_version'],
+      required: [
+        'files',
+        'patient_id',
+        'appointment_id',
+        'document_type',
+        'consent_version',
+      ],
     },
   })
   @ApiResponse({
@@ -353,7 +365,6 @@ export class ClinicalDocumentsController {
     const uploadedDocuments: any[] = [];
 
     for (const file of files) {
-      // Normalize file path to use forward slashes for web URLs
       const normalizedPath = file.path.replace(/\\/g, '/');
 
       const createClinicalDocumentDto: CreateClinicalDocumentDto = {
@@ -365,9 +376,9 @@ export class ClinicalDocumentsController {
         case_sheet,
       };
 
-      const result = await this.clinicalDocumentsService.create(createClinicalDocumentDto);
-
-      // Add public URL for accessing the document
+      const result = await this.clinicalDocumentsService.create(
+        createClinicalDocumentDto,
+      );
       const filename = file.filename;
       const publicUrl = `/api/v1/clinical-documents/file/${filename}`;
 

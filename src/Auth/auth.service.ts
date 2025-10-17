@@ -1,7 +1,3 @@
-/* eslint-disable prettier/prettier */
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import {
   Injectable,
   UnauthorizedException,
@@ -28,13 +24,11 @@ export class AuthService {
   ): Promise<{ user: Partial<Staff>; access_token: string }> {
     const { email, password, full_name, role } = registerDto;
 
-    // Check if user already exists (optional)
     const existingUser = await this.staffService.findByEmail(email);
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
 
-    // Create user
     const user = await this.staffService.create({
       email,
       full_name,
@@ -42,12 +36,11 @@ export class AuthService {
       role,
     });
 
-    // Generate JWT token
     const payload = { sub: user.staff_id, email: user.email, role: user.role };
     const access_token = this.jwtService.sign(payload);
 
-    // Return user without password
-    const { password: _, ...userWithoutPassword } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...userWithoutPassword } = user;
 
     return {
       user: userWithoutPassword,
@@ -58,26 +51,23 @@ export class AuthService {
   async login(
     loginDto: LoginDto,
   ): Promise<{ user: Partial<Staff>; access_token: string }> {
-    const { email, password } = loginDto;
+    const { email, password: loginPassword } = loginDto;
 
-    // Find user by email
     const user = await this.staffService.findByEmail(email);
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(loginPassword, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    // Generate JWT token
     const payload = { sub: user.staff_id, email: user.email, role: user.role };
     const access_token = this.jwtService.sign(payload);
 
-    // Return user without password
-    const { password: _, ...userWithoutPassword } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _userPassword, ...userWithoutPassword } = user;
 
     return {
       user: userWithoutPassword,

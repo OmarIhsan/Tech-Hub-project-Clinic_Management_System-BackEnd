@@ -1,5 +1,12 @@
-/* eslint-disable prettier/prettier */
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Patient } from '../../patients/entities/patient.entitiy';
 import { Doctors } from '../../doctors/entities/doctors.entity';
 
@@ -18,7 +25,10 @@ export class MedicalRecords {
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 
-  @ManyToOne(() => Doctors, (d) => d.medicalRecords, { onDelete: 'SET NULL', nullable: true })
+  @ManyToOne(() => Doctors, (d) => d.medicalRecords, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn({ name: 'doctor_id' })
   doctor: Doctors;
 

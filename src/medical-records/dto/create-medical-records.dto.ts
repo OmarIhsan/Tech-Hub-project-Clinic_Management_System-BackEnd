@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsInt,
@@ -38,8 +37,7 @@ export class CreateMedicalRecordsDto {
 
   @ApiProperty({
     description: 'Clinical findings observed during examination',
-    example: 'Abdominal pain, vomiting, dehydration', // e.g., "Abdominal pain, vomiting, dehydration".
-    maxLength: 100,
+    example: 'Abdominal pain, vomiting, dehydration',
   })
   @IsString()
   @IsNotEmpty()
@@ -48,7 +46,7 @@ export class CreateMedicalRecordsDto {
 
   @ApiProperty({
     description: 'Treatment plan or procedures administered',
-    example: 'IV fluids, antiemetics, dietary modification', //e.g., "IV fluids, antiemetics, dietary modification".
+    example: 'IV fluids, antiemetics, dietary modification',
     maxLength: 100,
   })
   @IsString()
@@ -58,7 +56,7 @@ export class CreateMedicalRecordsDto {
 
   @ApiProperty({
     description: 'Known allergies of the patient, ',
-    example: 'Penicillin, peanuts', //e.g., "Penicillin, peanuts".
+    example: 'Penicillin, peanuts',
     maxLength: 100,
   })
   @IsString()
@@ -68,7 +66,7 @@ export class CreateMedicalRecordsDto {
 
   @ApiPropertyOptional({
     description: 'Other relevant medical conditions',
-    example: 'Hypertension, diabetes', // e.g., "Hypertension, diabetes".
+    example: 'Hypertension, diabetes',
     maxLength: 100,
   })
   @IsString()
@@ -79,7 +77,7 @@ export class CreateMedicalRecordsDto {
   @ApiPropertyOptional({
     description: 'Current medications in JSON format',
     example: { medications: ['Metformin', 'Lisinopril'] },
-  }) //e.g., {"medications": ["Metformin", "Lisinopril"]}.
+  })
   @IsOptional()
   @IsObject()
   current_meds_json?: object;

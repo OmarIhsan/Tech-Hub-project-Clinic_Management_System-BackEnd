@@ -5,8 +5,8 @@ import { PatientImagesController } from './patient-images.controller';
 import { PatientImage } from './entities/patient-image.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([PatientImage])],
-    controllers: [PatientImagesController],
-    providers: [PatientImagesService],
+  imports: [TypeOrmModule.forFeature([PatientImage])],
+  controllers: [PatientImagesController],
+  providers: [PatientImagesService],
 })
-export class PatientImagesModule { }
+export class PatientImagesModule {}

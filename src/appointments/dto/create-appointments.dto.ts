@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { IsDateString, IsInt, IsEnum, IsNotEmpty } from 'class-validator';
 import { AppointmentStatus } from '../../common/enums/status.enums';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';

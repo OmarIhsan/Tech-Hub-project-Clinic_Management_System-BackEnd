@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -28,7 +27,6 @@ export class ClinicalDocument {
 
   @Column({ type: 'text' })
   file_path: string;
-
 
   @Column({ nullable: true })
   case_sheet: string;

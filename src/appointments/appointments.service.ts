@@ -1,8 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-
-
-
 import {
   Injectable,
   NotFoundException,
@@ -32,7 +27,7 @@ export class AppointmentService {
       patient_id,
       doctor_id,
       appointment_time: new Date(appointment_time),
-      status: (status ?? AppointmentStatus.SCHEDULED) as AppointmentStatus,
+      status: status ?? AppointmentStatus.SCHEDULED,
     });
 
     return this.appointmentRepository.save(appointment);
@@ -71,13 +66,10 @@ export class AppointmentService {
     const { status } = updateAppointmentDto;
 
     if (status !== undefined) {
-      // runtime guard in case validation layer is bypassed
-      if (
-        !Object.values(AppointmentStatus).includes(status as AppointmentStatus)
-      ) {
+      if (!Object.values(AppointmentStatus).includes(status)) {
         throw new ConflictException('Invalid appointment status value');
       }
-      appointment.status = status as AppointmentStatus;
+      appointment.status = status;
     }
 
     return this.appointmentRepository.save(appointment);

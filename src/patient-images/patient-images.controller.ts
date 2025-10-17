@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -45,7 +44,7 @@ import { existsSync } from 'fs';
 @ApiTags('patient-images')
 @Controller('patient-images')
 export class PatientImagesController {
-  constructor(private readonly patientImagesService: PatientImagesService) { }
+  constructor(private readonly patientImagesService: PatientImagesService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
@@ -77,7 +76,6 @@ export class PatientImagesController {
     @Query('offset') offset?: string,
     @Query('limit') limit?: string,
   ): Promise<PatientImage[]> {
-    // Safely parse query parameters, defaulting to 0 and 10
     const offsetNum =
       offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
     const limitNum =
@@ -103,10 +101,7 @@ export class PatientImagesController {
     description: 'Image file retrieved successfully.',
   })
   @ApiResponse({ status: 404, description: 'Image file not found.' })
-  async getImageFile(
-    @Param('filename') filename: string,
-    @Res() res: Response,
-  ) {
+  getImageFile(@Param('filename') filename: string, @Res() res: Response) {
     const filePath = join(process.cwd(), 'uploads', 'patient-images', filename);
 
     if (!existsSync(filePath)) {
@@ -224,12 +219,11 @@ export class PatientImagesController {
     @Body('image_type') image_type: string,
     @Body('uploaded_by_staff_id') uploaded_by_staff_id: string,
     @Body('notes') notes?: string,
-  ): Promise<PatientImage> {
+  ): Promise<PatientImage & { publicUrl: string }> {
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
 
-    // Normalize file path to use forward slashes for web URLs
     const normalizedPath = file.path.replace(/\\/g, '/');
 
     const createPatientImageDto: CreatePatientImageDto = {
@@ -240,24 +234,24 @@ export class PatientImagesController {
       notes,
     };
 
-    const result = await this.patientImagesService.create(createPatientImageDto);
+    const result = await this.patientImagesService.create(
+      createPatientImageDto,
+    );
 
-    // Add a helpful public URL for accessing the image
-    // Note: Use /patient-images/file/:filename endpoint to access images
     const filename = file.filename;
     const publicUrl = `/patient-images/file/${filename}`;
 
     return {
       ...result,
-      publicUrl, // Add this for convenience
-    } as any;
+      publicUrl,
+    };
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.ADMIN, StaffRole.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @Post('upload-multiple')
-  @UseInterceptors(FilesInterceptor('files', 10, multerConfig)) // Max 10 files
+  @UseInterceptors(FilesInterceptor('files', 10, multerConfig))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({
     summary: 'Upload multiple patient image files',
@@ -337,7 +331,6 @@ export class PatientImagesController {
     const uploadedImages: any[] = [];
 
     for (const file of files) {
-      // Normalize file path to use forward slashes for web URLs
       const normalizedPath = file.path.replace(/\\/g, '/');
 
       const createPatientImageDto: CreatePatientImageDto = {
@@ -348,9 +341,10 @@ export class PatientImagesController {
         notes,
       };
 
-      const result = await this.patientImagesService.create(createPatientImageDto);
+      const result = await this.patientImagesService.create(
+        createPatientImageDto,
+      );
 
-      // Add public URL for accessing the image
       const filename = file.filename;
       const publicUrl = `/patient-images/file/${filename}`;
 

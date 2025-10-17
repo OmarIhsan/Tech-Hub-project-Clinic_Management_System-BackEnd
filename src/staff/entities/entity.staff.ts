@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -49,7 +48,4 @@ export class Staff {
 
   @OneToMany(() => PatientImage, (img) => img.uploadedByStaff)
   uploadedImages: PatientImage[];
-
-
-
 }

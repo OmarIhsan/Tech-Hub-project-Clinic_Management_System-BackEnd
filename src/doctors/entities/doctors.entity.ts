@@ -1,5 +1,11 @@
-/* eslint-disable prettier/prettier */
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Appointment } from '../../appointments/entities/appointments.entity';
 import { MedicalRecords } from '../../medical-records/entities/medical-records.entity';
 import { TreatmentPlans } from '../../treatment-plans/entities/treatment-plans.entity';

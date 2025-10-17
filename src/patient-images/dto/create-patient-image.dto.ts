@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsString,
@@ -20,7 +19,7 @@ export class CreatePatientImageDto {
 
   @ApiProperty({
     description: 'Type of medical image',
-    example: 'CT scan', // such as "X-ray", "MRI", "CT scan", or "Ultrasound".
+    example: 'CT scan',
     maxLength: 50,
   })
   @IsString()
@@ -29,7 +28,8 @@ export class CreatePatientImageDto {
   image_type: string;
 
   @ApiPropertyOptional({
-    description: 'File path or URL to the stored medical image. (Auto-generated when uploading file)',
+    description:
+      'File path or URL to the stored medical image. (Auto-generated when uploading file)',
     example: '/images/patient/ctscan_12345.png',
     maxLength: 255,
   })

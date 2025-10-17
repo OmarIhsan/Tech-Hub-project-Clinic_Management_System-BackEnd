@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -44,7 +43,6 @@ export class Patient {
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 
-  // ----------------- Relations (inverse sides) -----------------
   @OneToMany(() => Appointment, (a) => a.patient)
   appointments: Appointment[];
 

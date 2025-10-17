@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Entity,
   Column,
@@ -9,7 +7,6 @@ import {
   ManyToOne,
   OneToMany,
   JoinColumn,
-  Index,
 } from 'typeorm';
 import { Patient } from '../../patients/entities/patient.entitiy';
 import { Doctors } from '../../doctors/entities/doctors.entity';
@@ -18,14 +15,12 @@ import { Procedures } from '../../procedures/entities/procedures.entity';
 import { ClinicalDocument } from '../../clinical-documents/entities/clinical-document.entity';
 import { AppointmentStatus } from '../../common/enums/status.enums';
 
-// NOTE: renamed to plural to match provided schema
 @Entity('appointments')
 export class Appointment {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', length: 20 })
-  //@Index('idx_appointments_status')
   status: AppointmentStatus;
 
   @Column({ type: 'timestamp' })

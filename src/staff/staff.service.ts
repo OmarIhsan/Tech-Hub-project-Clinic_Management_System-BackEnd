@@ -1,10 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-
-
-
-
 import {
   ConflictException,
   Injectable,
@@ -21,10 +14,13 @@ export class StaffService {
   constructor(
     @InjectRepository(Staff)
     private readonly staffRepo: Repository<Staff>,
-  ) { }
+  ) {}
 
   findAll(offset?: number, limit?: number): Promise<Staff[]> {
-    return this.staffRepo.find();
+    return this.staffRepo.find({
+      skip: offset,
+      take: limit,
+    });
   }
 
   async findOne(id: number): Promise<Staff> {

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,7 +13,7 @@ export class PatientImagesService {
   constructor(
     @InjectRepository(PatientImage)
     private readonly patientImageRepo: Repository<PatientImage>,
-  ) { }
+  ) {}
 
   findAll(offset?: number, limit?: number): Promise<PatientImage[]> {
     return this.patientImageRepo.find({
@@ -49,7 +48,6 @@ export class PatientImagesService {
   async remove(id: number): Promise<void> {
     const patientImage = await this.findOne(id);
 
-    // Delete the physical file if it exists
     if (patientImage.file_path) {
       const filePath = path.join(process.cwd(), patientImage.file_path);
       if (fs.existsSync(filePath)) {

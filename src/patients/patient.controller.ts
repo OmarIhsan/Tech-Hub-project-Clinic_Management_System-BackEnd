@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -32,7 +31,7 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 @ApiTags('patients')
 @Controller('patients')
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) { }
+  constructor(private readonly patientsService: PatientsService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.SUPER_ADMIN)
@@ -63,7 +62,6 @@ export class PatientsController {
     @Query('offset') offset?: string,
     @Query('limit') limit?: string,
   ): Promise<Patient[]> {
-    // Parse the query parameters safely, defaulting to 0 and 10
     const offsetNum =
       offset && !isNaN(parseInt(offset, 10)) ? parseInt(offset, 10) : 0;
     const limitNum =
