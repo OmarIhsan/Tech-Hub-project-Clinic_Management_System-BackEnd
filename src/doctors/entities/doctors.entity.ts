@@ -6,10 +6,10 @@ import {
   CreateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { Appointment } from '../../appointments/entities/appointments.entity';
 import { MedicalRecords } from '../../medical-records/entities/medical-records.entity';
 import { TreatmentPlans } from '../../treatment-plans/entities/treatment-plans.entity';
 import { Procedures } from '../../procedures/entities/procedures.entity';
+import { Appointment } from '../../appointments/entities/appointments.entity';
 
 @Entity('doctors')
 export class Doctors {
@@ -37,7 +37,6 @@ export class Doctors {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Inverse relations
   @OneToMany(() => Appointment, (a) => a.doctor)
   appointments: Appointment[];
 

@@ -14,7 +14,6 @@ export enum TreatmentPlanStatus {
 
 export enum StaffRole {
   OWNER = 'owner',
-  DOCTOR = 'doctor',
   STAFF = 'staff',
 }
 
