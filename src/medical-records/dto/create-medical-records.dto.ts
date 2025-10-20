@@ -75,8 +75,8 @@ export class CreateMedicalRecordsDto {
   medical_conditions?: string;
 
   @ApiPropertyOptional({
-    description: 'Current medications in JSON format',
-    example: { medications: ['Metformin', 'Lisinopril'] },
+    description: 'Current medications',
+    example: "Metformin, 'Lisinopril",
   })
   @IsOptional()
   @IsObject()

@@ -58,7 +58,7 @@ export class TreatmentPlansController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.OWNER)
+  @Roles(StaffRole.OWNER, StaffRole.DOCTOR)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({

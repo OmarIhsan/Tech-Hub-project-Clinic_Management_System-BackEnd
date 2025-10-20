@@ -59,7 +59,7 @@ export class ProceduresController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.OWNER)
+  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
