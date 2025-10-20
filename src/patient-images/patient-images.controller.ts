@@ -136,7 +136,7 @@ export class PatientImagesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
+  @Roles(StaffRole.STAFF, StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({
@@ -161,7 +161,7 @@ export class PatientImagesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
+  @Roles(StaffRole.STAFF, StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', multerConfig))
