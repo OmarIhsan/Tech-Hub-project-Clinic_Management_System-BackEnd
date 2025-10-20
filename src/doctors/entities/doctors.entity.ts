@@ -19,10 +19,10 @@ export class Doctors {
   @PrimaryGeneratedColumn()
   doctor_id: number;
 
-  @Column({ nullable: true })
+  @Column()
   staff_id: number;
 
-  @OneToOne(() => Staff)
+  @OneToOne(() => Staff, (staff) => staff.doctor_id, { cascade: true })
   @JoinColumn({ name: 'staff_id' })
   staff: Staff;
 
@@ -50,9 +50,6 @@ export class Doctors {
   @OneToMany(() => Appointment, (a) => a.doctor)
   appointments: Appointment[];
 
-  @OneToMany(() => Staff, (staff) => staff.doctor)
-  staffMembers: Staff[];
-
   // Removed patients relationship; patients are no longer linked to a specific doctor
 
   @OneToMany(() => MedicalRecords, (mr) => mr.doctor)
@@ -63,4 +60,5 @@ export class Doctors {
 
   @OneToMany(() => Procedures, (p) => p.doctor)
   procedures: Procedures[];
+
 }

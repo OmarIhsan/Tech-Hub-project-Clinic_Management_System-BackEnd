@@ -22,7 +22,7 @@ export class DoctorsService {
     private readonly staffService: StaffService,
     @InjectDataSource()
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   async create(createDoctorsDto: CreateDoctorsDto): Promise<Doctors> {
     const { full_name, gender, phone, email, hire_date } = createDoctorsDto;
@@ -77,7 +77,7 @@ export class DoctorsService {
           phone,
           email,
           hire_date: hireDateValue,
-          staff_id: staff.staff_id,
+          staff,
         });
 
         const savedDoctor = await manager.save(doctor);
@@ -89,7 +89,12 @@ export class DoctorsService {
           if (!staffEntity) {
             throw new Error(`Staff with id=${staff.staff_id} not found for linking`);
           }
+          // Now we can use either approach:
+          // Option 1: Assign just the ID (cleaner for simple foreign key assignment)
           staffEntity.doctor_id = savedDoctor.doctor_id;
+          // Option 2: Assign the object (TypeORM will extract the ID automatically)
+          // staffEntity.doctor = savedDoctor;
+
           await staffRepo.save(staffEntity);
           Logger.debug(`Linked staff_id=${staffEntity.staff_id} to doctor_id=${savedDoctor.doctor_id}`);
         } catch (linkErr) {
