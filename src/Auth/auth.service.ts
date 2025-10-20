@@ -104,7 +104,10 @@ export class AuthService {
   }
 
   // Admin-level password reset (caller should have OWNER privileges)
-  async adminResetPassword(email: string, newPassword: string): Promise<{ message: string }> {
+  async adminResetPassword(
+    email: string,
+    newPassword: string,
+  ): Promise<{ message: string }> {
     const lookupEmail = email.trim().toLowerCase();
     const user = await this.staffService.findByEmail(lookupEmail);
     if (!user) throw new NotFoundException('User not found');

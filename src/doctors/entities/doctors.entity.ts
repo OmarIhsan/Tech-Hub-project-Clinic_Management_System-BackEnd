@@ -60,5 +60,4 @@ export class Doctors {
 
   @OneToMany(() => Procedures, (p) => p.doctor)
   procedures: Procedures[];
-
 }

@@ -80,4 +80,26 @@ export class AppointmentService {
     await this.appointmentRepository.remove(appointment);
     return { message: 'Appointment deleted successfully' };
   }
+
+  async findByPatientAndDoctor(
+    patientId?: number,
+    doctorId?: number,
+  ): Promise<Appointment[]> {
+    const qb = this.appointmentRepository
+      .createQueryBuilder('appointment')
+      .leftJoinAndSelect('appointment.patient', 'patient')
+      .leftJoinAndSelect('appointment.doctor', 'doctor');
+
+    if (patientId) {
+      qb.andWhere('patient.patient_id = :patientId', { patientId });
+    }
+
+    if (doctorId) {
+      qb.andWhere('doctor.doctor_id = :doctorId', { doctorId });
+    }
+
+    qb.orderBy('appointment.appointment_time', 'DESC');
+
+    return qb.getMany();
+  }
 }

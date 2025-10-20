@@ -114,7 +114,9 @@ export class AuthController {
   @ApiBearerAuth('JWT-auth')
   @Post('admin/reset-password')
   @ApiOperation({ summary: 'Admin reset user password' })
-  async adminResetPassword(@Body() body: { email: string; newPassword: string }) {
+  async adminResetPassword(
+    @Body() body: { email: string; newPassword: string },
+  ) {
     return this.authService.adminResetPassword(body.email, body.newPassword);
   }
 }

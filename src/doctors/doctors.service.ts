@@ -22,7 +22,7 @@ export class DoctorsService {
     private readonly staffService: StaffService,
     @InjectDataSource()
     private readonly dataSource: DataSource,
-  ) { }
+  ) {}
 
   async create(createDoctorsDto: CreateDoctorsDto): Promise<Doctors> {
     const { full_name, gender, phone, email, hire_date } = createDoctorsDto;
@@ -40,16 +40,21 @@ export class DoctorsService {
     // due to doctor save failures (transaction will handle rollback but we can
     // provide clearer errors early).
     if (gender === undefined || gender === null) {
-      throw new BadRequestException('gender is required for doctor registration');
+      throw new BadRequestException(
+        'gender is required for doctor registration',
+      );
     }
     if (!email) {
-      throw new BadRequestException('email is required for doctor registration');
+      throw new BadRequestException(
+        'email is required for doctor registration',
+      );
     }
     if (!phone) {
-      throw new BadRequestException('phone is required for doctor registration');
+      throw new BadRequestException(
+        'phone is required for doctor registration',
+      );
     }
 
-    // Perform atomic creation of staff + doctor inside a transaction.
     const defaultPassword = 'Doctor@123'; // You can change this or generate a random password
 
     return await this.dataSource.transaction(async (manager) => {
@@ -85,21 +90,27 @@ export class DoctorsService {
         // Link doctor back to staff (set staff.doctor_id) so staff endpoints reflect the relation
         try {
           const staffRepo = manager.getRepository(Staff);
-          const staffEntity = await staffRepo.findOne({ where: { staff_id: staff.staff_id } });
+          const staffEntity = await staffRepo.findOne({
+            where: { staff_id: staff.staff_id },
+          });
           if (!staffEntity) {
-            throw new Error(`Staff with id=${staff.staff_id} not found for linking`);
+            throw new Error(
+              `Staff with id=${staff.staff_id} not found for linking`,
+            );
           }
-          // Now we can use either approach:
-          // Option 1: Assign just the ID (cleaner for simple foreign key assignment)
+
           staffEntity.doctor_id = savedDoctor.doctor_id;
-          // Option 2: Assign the object (TypeORM will extract the ID automatically)
-          // staffEntity.doctor = savedDoctor;
 
           await staffRepo.save(staffEntity);
-          Logger.debug(`Linked staff_id=${staffEntity.staff_id} to doctor_id=${savedDoctor.doctor_id}`);
+          Logger.debug(
+            `Linked staff_id=${staffEntity.staff_id} to doctor_id=${savedDoctor.doctor_id}`,
+          );
         } catch (linkErr) {
           // Log and rethrow to ensure transaction rolls back if linking fails
-          Logger.error('Failed to link staff to doctor', linkErr instanceof Error ? linkErr.stack : JSON.stringify(linkErr));
+          Logger.error(
+            'Failed to link staff to doctor',
+            linkErr instanceof Error ? linkErr.stack : JSON.stringify(linkErr),
+          );
           throw linkErr;
         }
 

@@ -62,10 +62,15 @@ export class DoctorsController {
   @Post('register')
   @ApiOperation({
     summary: 'Register a new doctor (public)',
-    description: 'Registers a doctor account and creates corresponding staff record.',
+    description:
+      'Registers a doctor account and creates corresponding staff record.',
   })
   @ApiBody({ type: CreateDoctorsDto })
-  @ApiResponse({ status: 201, description: 'Doctor registered.', type: Doctors })
+  @ApiResponse({
+    status: 201,
+    description: 'Doctor registered.',
+    type: Doctors,
+  })
   async register(@Body() createDoctorsDto: CreateDoctorsDto) {
     return this.doctorsService.create(createDoctorsDto);
   }

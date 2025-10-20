@@ -36,7 +36,9 @@ export class StaffService {
   // Accept an optional EntityManager to allow transactional operations.
   async create(data: Partial<Staff>, manager?: EntityManager): Promise<Staff> {
     const logger = new Logger('StaffService');
-    logger.debug(`create called for email=${data.email} with manager=${!!manager}`);
+    logger.debug(
+      `create called for email=${data.email} with manager=${!!manager}`,
+    );
     if (data.hire_date && typeof data.hire_date === 'string') {
       data.hire_date = new Date(data.hire_date);
     }

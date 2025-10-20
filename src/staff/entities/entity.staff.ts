@@ -37,7 +37,6 @@ export class Staff {
   @Column()
   password: string;
 
-
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 

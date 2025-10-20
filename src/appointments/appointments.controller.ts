@@ -127,6 +127,22 @@ export class AppointmentController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(StaffRole.STAFF, StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
+  @Get('search')
+  @ApiOperation({ summary: 'Search appointments by patient and/or doctor' })
+  @ApiQuery({ name: 'patient_id', required: false })
+  @ApiQuery({ name: 'doctor_id', required: false })
+  async search(
+    @Query('patient_id') patientId?: string,
+    @Query('doctor_id') doctorId?: string,
+  ) {
+    const p = patientId ? Number(patientId) : undefined;
+    const d = doctorId ? Number(doctorId) : undefined;
+    return this.appointmentService.findByPatientAndDoctor(p, d);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(StaffRole.STAFF, StaffRole.DOCTOR, StaffRole.OWNER)
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   @ApiOperation({
     summary: 'Update appointment',
