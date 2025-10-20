@@ -34,7 +34,7 @@ export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.OWNER)
+  @Roles(StaffRole.STAFF, StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
@@ -71,7 +71,7 @@ export class PatientsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
+  @Roles(StaffRole.STAFF, StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({

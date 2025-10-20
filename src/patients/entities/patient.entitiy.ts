@@ -19,6 +19,8 @@ export class Patient {
   @PrimaryGeneratedColumn()
   patient_id: number;
 
+  // Doctor assignment removed; all doctors and staff can access all patients
+
   @Column({ length: 50 })
   full_name: string;
 

@@ -5,16 +5,29 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Expense } from '../../expenses/entities/expense.entity';
 import { OtherIncome } from '../../other-incomes/entities/other-income.entity';
 import { PatientImage } from '../../patient-images/entities/patient-image.entity';
 import { StaffRole } from 'src/common/enums/status.enums';
+import { Doctors } from '../../doctors/entities/doctors.entity';
 
 @Entity('staff')
 export class Staff {
   @PrimaryGeneratedColumn()
   staff_id: number;
+
+  @Column({ nullable: true })
+  doctor_id: number;
+
+  @ManyToOne(() => Doctors, (doctor) => doctor.staffMembers, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'doctor_id' })
+  doctor: Doctors;
 
   @Column({ length: 100 })
   full_name: string;

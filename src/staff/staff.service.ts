@@ -4,8 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, EntityManager, DeepPartial } from 'typeorm';
+import { Logger } from '@nestjs/common';
 import { Staff } from './entities/entity.staff';
+import { Doctors } from '../doctors/entities/doctors.entity';
 import * as bcrypt from 'bcrypt';
 import { StaffRole } from 'src/common/enums/status.enums';
 
@@ -14,6 +16,8 @@ export class StaffService {
   constructor(
     @InjectRepository(Staff)
     private readonly staffRepo: Repository<Staff>,
+    @InjectRepository(Doctors)
+    private readonly doctorsRepo: Repository<Doctors>,
   ) {}
 
   findAll(offset?: number, limit?: number): Promise<Staff[]> {
@@ -29,9 +33,17 @@ export class StaffService {
     return staff;
   }
 
-  async create(data: Partial<Staff>): Promise<Staff> {
+  // Accept an optional EntityManager to allow transactional operations.
+  async create(data: Partial<Staff>, manager?: EntityManager): Promise<Staff> {
+    const logger = new Logger('StaffService');
+    logger.debug(`create called for email=${data.email} with manager=${!!manager}`);
     if (data.hire_date && typeof data.hire_date === 'string') {
       data.hire_date = new Date(data.hire_date);
+    }
+
+    // Normalize email to avoid mismatches during login
+    if (data.email && typeof data.email === 'string') {
+      data.email = data.email.trim().toLowerCase();
     }
 
     if (data.password) {
@@ -42,16 +54,27 @@ export class StaffService {
       data.role = StaffRole.STAFF;
     }
 
+    // Use the provided manager if inside a transaction, otherwise use repository
+    const repo = manager ? manager.getRepository(Staff) : this.staffRepo;
+
     if (data.email) {
-      const existing = await this.staffRepo.findOne({
-        where: { email: data.email },
-      });
+      const existing = await repo.findOne({ where: { email: data.email } });
       if (existing)
         throw new ConflictException('Staff with this email already exists');
     }
 
-    const staff = this.staffRepo.create(data);
-    return this.staffRepo.save(staff);
+    const staffEntity = repo.create(data as DeepPartial<Staff>);
+    try {
+      const saved = await repo.save(staffEntity);
+      logger.debug(`staff saved id=${saved.staff_id}`);
+      return saved;
+    } catch (err) {
+      logger.error(
+        'Failed to save staff',
+        err instanceof Error ? err.stack : JSON.stringify(err),
+      );
+      throw err;
+    }
   }
 
   async update(id: number, data: Partial<Staff>): Promise<Staff> {
@@ -70,7 +93,35 @@ export class StaffService {
     }
 
     Object.assign(staff, data);
-    return this.staffRepo.save(staff);
+    const updatedStaff = await this.staffRepo.save(staff);
+
+    // Sync updates to doctor table if this staff member is linked to a doctor
+    const doctor = await this.doctorsRepo.findOne({
+      where: { staff_id: id },
+    });
+
+    if (doctor) {
+      const doctorUpdateData: {
+        full_name?: string;
+        phone?: string;
+        email?: string;
+        hire_date?: Date;
+      } = {};
+
+      if (data.full_name !== undefined)
+        doctorUpdateData.full_name = data.full_name;
+      if (data.phone !== undefined) doctorUpdateData.phone = data.phone;
+      if (data.email !== undefined) doctorUpdateData.email = data.email;
+      if (data.hire_date !== undefined)
+        doctorUpdateData.hire_date = data.hire_date;
+
+      if (Object.keys(doctorUpdateData).length > 0) {
+        Object.assign(doctor, doctorUpdateData);
+        await this.doctorsRepo.save(doctor);
+      }
+    }
+
+    return updatedStaff;
   }
 
   async remove(id: number): Promise<void> {

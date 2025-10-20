@@ -7,16 +7,17 @@ import {
   IsOptional,
   IsEnum,
   IsDate,
+  MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Gender } from 'src/common/enums/status.enums';
+import { StaffRole } from 'src/common/enums/status.enums';
 import { Type } from 'class-transformer';
 
 export class CreateDoctorsDto {
   @ApiProperty({
-    description:
-      'Full legal name of the doctor, including title if applicable.',
-    example: 'Dr. John Doe',
+    description: 'Full legal name of the staff member.',
+    example: 'Jon Smith',
     maxLength: 100,
   })
   @IsString()
@@ -24,30 +25,31 @@ export class CreateDoctorsDto {
   @MaxLength(100)
   full_name: string;
 
-  @ApiProperty({
-    description: 'Gender of the doctor',
+  @ApiPropertyOptional({
+    description: 'Gender of the staff member',
     example: 'Male',
     enum: Gender,
   })
   @IsEnum(Gender)
-  gender: Gender;
+  @IsOptional()
+  gender?: Gender;
 
   @ApiProperty({
-    description: "Doctor's contact phone number in international format.",
+    description: "Staff member's contact phone number in international format.",
     example: '+9647701234567',
-    maxLength: 100,
+    maxLength: 20,
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
+  @MaxLength(20)
   @Matches(/^\+\d{10,15}$/, {
     message: 'Phone number must be in international format.',
   })
   phone: string;
 
   @ApiProperty({
-    description: "Doctor's professional email address.",
-    example: 'john.doe@clinic.com',
+    description: "Staff member's professional email address.",
+    example: 'jon1.sm2@gmail.com',
     maxLength: 100,
   })
   @IsEmail()
@@ -55,12 +57,33 @@ export class CreateDoctorsDto {
   @MaxLength(100)
   email: string;
 
-  @ApiPropertyOptional({
-    description: 'Date the doctor was hired, in ISO 8601 format.',
-    example: '2025-10-06',
+  @ApiProperty({
+    description: 'Date the staff member was hired, in ISO 8601 format.',
+    example: '2022-09-04',
   })
   @Type(() => Date)
   @IsDate()
+  @IsNotEmpty()
+  hire_date: Date;
+
+  @ApiPropertyOptional({
+    description: 'Role of the staff member within the clinic.',
+    enum: StaffRole,
+    default: StaffRole.STAFF,
+  })
+  @IsEnum(StaffRole)
   @IsOptional()
-  hire_date?: Date;
+  role?: StaffRole;
+
+  @ApiProperty({
+    description:
+      'Password for the staff member account (minimum 6 characters).',
+    example: 'securePassword123',
+    maxLength: 100,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(100)
+  password: string;
 }

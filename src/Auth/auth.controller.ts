@@ -14,6 +14,8 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { Staff } from 'src/staff/entities/entity.staff';
+import { Roles } from './decorators/roles.decorator';
+import { StaffRole } from 'src/common/enums/status.enums';
 import {
   ApiTags,
   ApiOperation,
@@ -105,5 +107,14 @@ export class AuthController {
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
     return this.authService.changePassword(user.staff_id, changePasswordDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(StaffRole.OWNER)
+  @ApiBearerAuth('JWT-auth')
+  @Post('admin/reset-password')
+  @ApiOperation({ summary: 'Admin reset user password' })
+  async adminResetPassword(@Body() body: { email: string; newPassword: string }) {
+    return this.authService.adminResetPassword(body.email, body.newPassword);
   }
 }

@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   ConflictException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { StaffService } from 'src/staff/staff.service';
@@ -52,8 +53,10 @@ export class AuthService {
     loginDto: LoginDto,
   ): Promise<{ user: Partial<Staff>; access_token: string }> {
     const { email, password: loginPassword } = loginDto;
+    // Normalize email used for lookup
+    const lookupEmail = email.trim().toLowerCase();
 
-    const user = await this.staffService.findByEmail(email);
+    const user = await this.staffService.findByEmail(lookupEmail);
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -98,6 +101,17 @@ export class AuthService {
     await this.staffService.updatePassword(userId, hashedNewPassword);
 
     return { message: 'Password changed successfully' };
+  }
+
+  // Admin-level password reset (caller should have OWNER privileges)
+  async adminResetPassword(email: string, newPassword: string): Promise<{ message: string }> {
+    const lookupEmail = email.trim().toLowerCase();
+    const user = await this.staffService.findByEmail(lookupEmail);
+    if (!user) throw new NotFoundException('User not found');
+
+    const hashed = await bcrypt.hash(newPassword, 12);
+    await this.staffService.updatePassword(user.staff_id, hashed);
+    return { message: 'Password reset successfully' };
   }
 
   private excludePassword(user: Staff): Partial<Staff> {

@@ -16,6 +16,7 @@ import { UpdateDoctorsDto } from './dto/update-doctors.dto';
 import { Roles } from 'src/Auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/Auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/Auth/guards/roles.guard';
+import { Public } from 'src/Auth/decorators/public.decorator';
 import { StaffRole } from 'src/common/enums/status.enums';
 import {
   ApiTags,
@@ -56,8 +57,21 @@ export class DoctorsController {
     return this.doctorsService.create(createDoctorsDto);
   }
 
+  // Public registration endpoint: creates both staff and doctor in one atomic request
+  @Public()
+  @Post('register')
+  @ApiOperation({
+    summary: 'Register a new doctor (public)',
+    description: 'Registers a doctor account and creates corresponding staff record.',
+  })
+  @ApiBody({ type: CreateDoctorsDto })
+  @ApiResponse({ status: 201, description: 'Doctor registered.', type: Doctors })
+  async register(@Body() createDoctorsDto: CreateDoctorsDto) {
+    return this.doctorsService.create(createDoctorsDto);
+  }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.OWNER)
+  @Roles(StaffRole.OWNER, StaffRole.DOCTOR, StaffRole.STAFF)
   @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({
@@ -96,7 +110,7 @@ export class DoctorsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(StaffRole.OWNER)
+  @Roles(StaffRole.OWNER, StaffRole.DOCTOR, StaffRole.STAFF)
   @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOperation({
