@@ -36,9 +36,6 @@ export class DoctorsService {
       }
     }
 
-    // Validate required doctor fields before creating staff to avoid orphaned staff
-    // due to doctor save failures (transaction will handle rollback but we can
-    // provide clearer errors early).
     if (gender === undefined || gender === null) {
       throw new BadRequestException(
         'gender is required for doctor registration',
@@ -55,8 +52,7 @@ export class DoctorsService {
       );
     }
 
-    const defaultPassword = 'Doctor@123'; // You can change this or generate a random password
-
+    const defaultPassword = 'Doctor@123';
     return await this.dataSource.transaction(async (manager) => {
       try {
         const staff = await this.staffService.create(
@@ -87,7 +83,6 @@ export class DoctorsService {
 
         const savedDoctor = await manager.save(doctor);
 
-        // Link doctor back to staff (set staff.doctor_id) so staff endpoints reflect the relation
         try {
           const staffRepo = manager.getRepository(Staff);
           const staffEntity = await staffRepo.findOne({
@@ -106,7 +101,6 @@ export class DoctorsService {
             `Linked staff_id=${staffEntity.staff_id} to doctor_id=${savedDoctor.doctor_id}`,
           );
         } catch (linkErr) {
-          // Log and rethrow to ensure transaction rolls back if linking fails
           Logger.error(
             'Failed to link staff to doctor',
             linkErr instanceof Error ? linkErr.stack : JSON.stringify(linkErr),
@@ -117,7 +111,6 @@ export class DoctorsService {
         Logger.debug(`doctor saved id=${savedDoctor.doctor_id}`);
         return savedDoctor;
       } catch (err) {
-        // log and rethrow so the transaction will rollback and caller sees the error
         Logger.error(
           'Error during doctor registration transaction',
           err instanceof Error ? err.stack : JSON.stringify(err),
@@ -180,7 +173,6 @@ export class DoctorsService {
       }
     }
 
-    // Sync updates to staff table if staff_id exists
     if (doctor.staff_id) {
       const staffUpdateData: {
         full_name?: string;

@@ -53,7 +53,6 @@ export class AuthService {
     loginDto: LoginDto,
   ): Promise<{ user: Partial<Staff>; access_token: string }> {
     const { email, password: loginPassword } = loginDto;
-    // Normalize email used for lookup
     const lookupEmail = email.trim().toLowerCase();
 
     const user = await this.staffService.findByEmail(lookupEmail);
@@ -103,7 +102,6 @@ export class AuthService {
     return { message: 'Password changed successfully' };
   }
 
-  // Admin-level password reset (caller should have OWNER privileges)
   async adminResetPassword(
     email: string,
     newPassword: string,

@@ -273,7 +273,7 @@ export class ClinicalDocumentsController {
   @Roles(StaffRole.DOCTOR, StaffRole.OWNER)
   @ApiBearerAuth('JWT-auth')
   @Post('upload-multiple')
-  @UseInterceptors(FilesInterceptor('files', 10, multerConfigClinicalDocuments)) // Max 10 files
+  @UseInterceptors(FilesInterceptor('files', 10, multerConfigClinicalDocuments))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({
     summary: 'Upload multiple clinical document files',

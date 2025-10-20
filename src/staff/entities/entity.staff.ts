@@ -52,11 +52,9 @@ export class Staff {
   @OneToMany(() => PatientImage, (img) => img.uploadedByStaff)
   uploadedImages: PatientImage[];
 
-  // Foreign key to link staff with doctor (when staff member is a doctor)
   @Column({ nullable: true })
   doctor_id: number;
 
-  // Relationship to Doctors entity
   @OneToOne(() => Doctors, (doctor) => doctor.staff)
   @JoinColumn({ name: 'doctor_id' })
   doctor: Doctors;

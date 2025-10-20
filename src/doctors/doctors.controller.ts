@@ -57,7 +57,6 @@ export class DoctorsController {
     return this.doctorsService.create(createDoctorsDto);
   }
 
-  // Public registration endpoint: creates both staff and doctor in one atomic request
   @Public()
   @Post('register')
   @ApiOperation({

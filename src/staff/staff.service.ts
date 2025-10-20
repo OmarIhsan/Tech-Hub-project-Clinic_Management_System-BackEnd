@@ -33,7 +33,6 @@ export class StaffService {
     return staff;
   }
 
-  // Accept an optional EntityManager to allow transactional operations.
   async create(data: Partial<Staff>, manager?: EntityManager): Promise<Staff> {
     const logger = new Logger('StaffService');
     logger.debug(
@@ -43,7 +42,6 @@ export class StaffService {
       data.hire_date = new Date(data.hire_date);
     }
 
-    // Normalize email to avoid mismatches during login
     if (data.email && typeof data.email === 'string') {
       data.email = data.email.trim().toLowerCase();
     }
@@ -56,7 +54,6 @@ export class StaffService {
       data.role = StaffRole.STAFF;
     }
 
-    // Use the provided manager if inside a transaction, otherwise use repository
     const repo = manager ? manager.getRepository(Staff) : this.staffRepo;
 
     if (data.email) {
@@ -97,7 +94,6 @@ export class StaffService {
     Object.assign(staff, data);
     const updatedStaff = await this.staffRepo.save(staff);
 
-    // Sync updates to doctor table if this staff member is linked to a doctor
     const doctor = await this.doctorsRepo.findOne({
       where: { staff_id: id },
     });

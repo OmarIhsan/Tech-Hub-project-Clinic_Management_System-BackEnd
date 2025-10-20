@@ -50,8 +50,6 @@ export class Doctors {
   @OneToMany(() => Appointment, (a) => a.doctor)
   appointments: Appointment[];
 
-  // Removed patients relationship; patients are no longer linked to a specific doctor
-
   @OneToMany(() => MedicalRecords, (mr) => mr.doctor)
   medicalRecords: MedicalRecords[];
 
