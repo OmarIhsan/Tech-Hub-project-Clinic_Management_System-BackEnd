@@ -25,7 +25,8 @@ export class DoctorsService {
   ) {}
 
   async create(createDoctorsDto: CreateDoctorsDto): Promise<Doctors> {
-    const { full_name, gender, phone, email, hire_date } = createDoctorsDto;
+    const { full_name, gender, phone, email, hire_date, password } =
+      createDoctorsDto;
 
     let hireDateValue: Date | undefined;
     if (hire_date) {
@@ -52,7 +53,6 @@ export class DoctorsService {
       );
     }
 
-    const defaultPassword = 'Doctor@123';
     return await this.dataSource.transaction(async (manager) => {
       try {
         const staff = await this.staffService.create(
@@ -60,7 +60,7 @@ export class DoctorsService {
             email,
             full_name,
             phone,
-            password: defaultPassword,
+            password,
             role: StaffRole.DOCTOR,
             hire_date: hireDateValue,
           },
