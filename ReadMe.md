@@ -21,7 +21,6 @@ This README explains the codebase, how to run it locally, environment variables,
 - Troubleshooting
 - Production checklist & recommendations
 - Contributing
-- License
 
 ---
 
