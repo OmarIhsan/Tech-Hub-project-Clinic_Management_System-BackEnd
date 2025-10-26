@@ -1,4 +1,4 @@
-# 🏥 Clinic Management System — Backend
+# Tech Hub — Clinic Management System (BackEnd)
 
 A production-oriented backend for managing clinic operations: patients, doctors, staff, appointments, medical records, treatment plans, procedures, finances, and clinical documents (uploads).
 
@@ -251,4 +251,4 @@ Pick one and I'll prepare a PR with the changes.
 
 ---
 
-© Clinic Management System Backend Team - QafLab 
+© Clinic Management System BackEnd Team - QafLab 
